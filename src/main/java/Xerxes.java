@@ -31,6 +31,14 @@ public class Xerxes {
                 ToDo task = new ToDo(taskName);
                 tasks.add(task);
                 msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
+            } else if (userMsg.startsWith("deadline ")) {
+                String taskNameAndDeadline = userMsg.split(" ", 2)[1];
+                String taskName = taskNameAndDeadline.split(" /by ")[0];
+                String deadline = taskNameAndDeadline.split(" /by ")[1];
+
+                Deadline task = new Deadline(taskName, deadline);
+                tasks.add(task);
+                msgWithDivider("Gotcha boss, the task: " + taskdie + " has been added!");
             } else {
                 tasks.add(new Task(userMsg));
                 msgWithDivider(userMsg);
