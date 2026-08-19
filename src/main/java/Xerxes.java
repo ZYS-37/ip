@@ -38,7 +38,17 @@ public class Xerxes {
 
                 Deadline task = new Deadline(taskName, deadline);
                 tasks.add(task);
-                msgWithDivider("Gotcha boss, the task: " + taskdie + " has been added!");
+                msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
+            } else if (userMsg.startsWith("event ")) {
+                String eventAndDuration = userMsg.split(" ", 2)[1];
+                String eventName = eventAndDuration.split(" /from ")[0];
+                String duration = eventAndDuration.split(" /from ")[1];
+                String startTime = duration.split(" /to ")[0];
+                String endTime = duration.split(" /to ")[1];
+
+                Event task = new Event(eventName, startTime, endTime);
+                tasks.add(task);
+                msgWithDivider("Gotcha boss, the event: " + task + " has been added!");
             } else {
                 tasks.add(new Task(userMsg));
                 msgWithDivider(userMsg);
