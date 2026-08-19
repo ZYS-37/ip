@@ -34,6 +34,8 @@ public class Xerxes {
                 handleAddDeadline(tasks, userMsg);
             } else if (userMsg.startsWith("event ")) {
                 handleAddEvent(tasks, userMsg);
+            } else if (userMsg.matches("delete \\d+")) {
+                handleDeletion(tasks, userMsg);
             } else {
                 msgWithDivider("I dont gets, not going to do anth.");
             }
@@ -136,5 +138,19 @@ public class Xerxes {
         Event task = new Event(taskName, startTime, endTime);
         tasks.add(task);
         msgWithDivider("Gotcha boss, the event: " + task + " has been added!");
+    }
+
+    public static void handleDeletion(List<Task> tasks, String userMsg) {
+
+        int index = Integer.parseInt(userMsg.substring(7).trim());
+
+        if (index < 0 || index >= tasks.size()) {
+            msgWithDivider("Invalid task number! Please provide an index between 1 and " + tasks.size() + ".");
+            return;
+        }
+
+        Task task = tasks.get(index - 1);
+        msgWithDivider("got it! " + task + " has been removed");
+        tasks.remove (index - 1);
     }
 }
