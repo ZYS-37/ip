@@ -26,8 +26,9 @@ public class Xerxes {
                 handleTaskStatus(tasks, userMsg, true);
             } else if (userMsg.matches("unmark \\d+")) {
                 handleTaskStatus(tasks, userMsg, false);
-            } else if (userMsg.startsWith("todo")) {
-                ToDo task = new ToDo(userMsg);
+            } else if (userMsg.startsWith("todo ")) {
+                String taskName = userMsg.split(" ", 2)[1];
+                ToDo task = new ToDo(taskName);
                 tasks.add(task);
                 msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
             } else {
