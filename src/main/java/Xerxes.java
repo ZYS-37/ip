@@ -35,8 +35,7 @@ public class Xerxes {
             } else if (userMsg.startsWith("event ")) {
                 handleAddEvent(tasks, userMsg);
             } else {
-                tasks.add(new Task(userMsg));
-                msgWithDivider(userMsg);
+                msgWithDivider("I dont gets, not going to do anth.");
             }
         }
         msgWithDivider("Ciao, cya again");
