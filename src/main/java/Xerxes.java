@@ -5,19 +5,21 @@ import java.util.ArrayList;
 
 public class Xerxes {
     public static final String DIVIDER = "____________________________________________________________";
-
     public static final String BANNER = "__  __                        \n"
             + "\\ \\/ /  ___   _ __ __  __  ___  ___ \n"
             + " \\  /  / _ \\| '__|\\ \\/ / / _ \\/ __|\n"
             + " /  \\ |  __/| |    >  < |  __/\\__ \\\n"
             + "/_/\\_\\ \\___||_|   /_/\\_\\ \\___||___/";
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         List<Task> tasks = new ArrayList<>();
         initialMsg();
+
         boolean active = true;
         while (active) {
             String userMsg = scanner.nextLine();
+
             if (Objects.equals(userMsg, "bye")) {
                 active = false;
             } else if (Objects.equals(userMsg, "list")) {
@@ -27,28 +29,11 @@ public class Xerxes {
             } else if (userMsg.matches("unmark \\d+")) {
                 handleTaskStatus(tasks, userMsg, false);
             } else if (userMsg.startsWith("todo ")) {
-                String taskName = userMsg.split(" ", 2)[1];
-                ToDo task = new ToDo(taskName);
-                tasks.add(task);
-                msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
+                handleAddToDo(tasks,userMsg);
             } else if (userMsg.startsWith("deadline ")) {
-                String taskNameAndDeadline = userMsg.split(" ", 2)[1];
-                String taskName = taskNameAndDeadline.split(" /by ")[0];
-                String deadline = taskNameAndDeadline.split(" /by ")[1];
-
-                Deadline task = new Deadline(taskName, deadline);
-                tasks.add(task);
-                msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
+                handleAddDeadline(tasks, userMsg);
             } else if (userMsg.startsWith("event ")) {
-                String eventAndDuration = userMsg.split(" ", 2)[1];
-                String eventName = eventAndDuration.split(" /from ")[0];
-                String duration = eventAndDuration.split(" /from ")[1];
-                String startTime = duration.split(" /to ")[0];
-                String endTime = duration.split(" /to ")[1];
-
-                Event task = new Event(eventName, startTime, endTime);
-                tasks.add(task);
-                msgWithDivider("Gotcha boss, the event: " + task + " has been added!");
+                handleAddEvent(tasks, userMsg);
             } else {
                 tasks.add(new Task(userMsg));
                 msgWithDivider(userMsg);
@@ -99,5 +84,34 @@ public class Xerxes {
         } catch (NumberFormatException e) {
             msgWithDivider("what theee, your number is way too big!");
         }
+    }
+
+    public static void handleAddToDo(List<Task> tasks, String userMsg){
+        String taskName = userMsg.split(" ", 2)[1];
+        ToDo task = new ToDo(taskName);
+        tasks.add(task);
+        msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
+    }
+
+    public static void handleAddDeadline(List<Task> tasks, String userMsg){
+        String taskNameAndDeadline = userMsg.split(" ", 2)[1];
+        String taskName = taskNameAndDeadline.split(" /by ")[0];
+        String deadline = taskNameAndDeadline.split(" /by ")[1];
+
+        Deadline task = new Deadline(taskName, deadline);
+        tasks.add(task);
+        msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
+    }
+
+    public static void handleAddEvent(List<Task> tasks, String userMsg){
+        String eventAndDuration = userMsg.split(" ", 2)[1];
+        String eventName = eventAndDuration.split(" /from ")[0];
+        String duration = eventAndDuration.split(" /from ")[1];
+        String startTime = duration.split(" /to ")[0];
+        String endTime = duration.split(" /to ")[1];
+
+        Event task = new Event(eventName, startTime, endTime);
+        tasks.add(task);
+        msgWithDivider("Gotcha boss, the event: " + task + " has been added!");
     }
 }
