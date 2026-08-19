@@ -22,6 +22,12 @@ public class Xerxes {
                 active = false;
             } else if (Objects.equals(userMsg, "list")) {
                 printTaskList(tasks);
+            } else if (userMsg.matches("mark \\d+")) {
+                String msgNum = userMsg.split(" ")[1];
+                int taskIndex = Integer.parseInt(msgNum) - 1;
+                Task task = tasks.get(taskIndex);
+                task.markCompleted();
+                msgWithDivider("Yippy! "+ (taskIndex + 1) + ": " + task + " has been mark completed.");
             } else {
                 tasks.add(new Task(userMsg));
                 msgWithDivider(userMsg);
