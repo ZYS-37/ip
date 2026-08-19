@@ -26,6 +26,10 @@ public class Xerxes {
                 handleTaskStatus(tasks, userMsg, true);
             } else if (userMsg.matches("unmark \\d+")) {
                 handleTaskStatus(tasks, userMsg, false);
+            } else if (userMsg.startsWith("todo")) {
+                ToDo task = new ToDo(userMsg);
+                tasks.add(task);
+                msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
             } else {
                 tasks.add(new Task(userMsg));
                 msgWithDivider(userMsg);
