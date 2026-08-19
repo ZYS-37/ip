@@ -28,6 +28,12 @@ public class Xerxes {
                 Task task = tasks.get(taskIndex);
                 task.markCompleted();
                 msgWithDivider("Yippy! "+ (taskIndex + 1) + ": " + task + " has been mark completed.");
+            } else if (userMsg.matches("unmark \\d+")) {
+                String msgNum = userMsg.split(" ")[1];
+                int taskIndex = Integer.parseInt(msgNum) - 1;
+                Task task = tasks.get(taskIndex);
+                task.markUncompleted();
+                msgWithDivider("Aww! "+ (taskIndex + 1) + ": " + task + " has been marked uncompleted.");
             } else {
                 tasks.add(new Task(userMsg));
                 msgWithDivider(userMsg);

@@ -10,6 +10,10 @@ public class Task {
         this.completed = true;
     }
 
+    public void markUncompleted() {
+        this.completed = false;
+    }
+
     @Override
     public String toString () {
         if (completed) {
