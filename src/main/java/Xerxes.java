@@ -23,17 +23,9 @@ public class Xerxes {
             } else if (Objects.equals(userMsg, "list")) {
                 printTaskList(tasks);
             } else if (userMsg.matches("mark \\d+")) {
-                String msgNum = userMsg.split(" ")[1];
-                int taskIndex = Integer.parseInt(msgNum) - 1;
-                Task task = tasks.get(taskIndex);
-                task.markCompleted();
-                msgWithDivider("Yippy! "+ (taskIndex + 1) + ": " + task + " has been mark completed.");
+                handleTaskStatus(tasks, userMsg, true);
             } else if (userMsg.matches("unmark \\d+")) {
-                String msgNum = userMsg.split(" ")[1];
-                int taskIndex = Integer.parseInt(msgNum) - 1;
-                Task task = tasks.get(taskIndex);
-                task.markUncompleted();
-                msgWithDivider("Aww! "+ (taskIndex + 1) + ": " + task + " has been marked uncompleted.");
+                handleTaskStatus(tasks, userMsg, false);
             } else {
                 tasks.add(new Task(userMsg));
                 msgWithDivider(userMsg);
@@ -63,5 +55,19 @@ public class Xerxes {
             i++;
         }
         printDivider();
+    }
+
+    public static void handleTaskStatus(List<Task> tasks, String input, boolean isCompleted) {
+        String msgNum = input.split(" ")[1];
+        int taskIndex = Integer.parseInt(msgNum) - 1;
+        Task task = tasks.get(taskIndex);
+        if (isCompleted) {
+            task.markCompleted();
+            msgWithDivider("Yippy! "+ (taskIndex + 1) + ": " + task + " has been mark completed.");
+        } else {
+            task.markUncompleted();
+            msgWithDivider("Aww! "+ (taskIndex + 1) + ": " + task + " has been marked uncompleted.");
+        }
+
     }
 }
