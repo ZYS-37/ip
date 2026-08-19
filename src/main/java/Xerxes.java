@@ -58,16 +58,23 @@ public class Xerxes {
     }
 
     public static void handleTaskStatus(List<Task> tasks, String input, boolean isCompleted) {
-        String msgNum = input.split(" ")[1];
-        int taskIndex = Integer.parseInt(msgNum) - 1;
-        Task task = tasks.get(taskIndex);
-        if (isCompleted) {
-            task.markCompleted();
-            msgWithDivider("Yippy! "+ (taskIndex + 1) + ": " + task + " has been mark completed.");
-        } else {
-            task.markUncompleted();
-            msgWithDivider("Aww! "+ (taskIndex + 1) + ": " + task + " has been marked uncompleted.");
+        try {
+            String msgNum = input.split(" ")[1];
+            int taskIndex = Integer.parseInt(msgNum) - 1;
+            if (taskIndex < 0 || taskIndex >= tasks.size()) {
+                msgWithDivider("Invalid task number! Please provide an index between 1 and " + tasks.size() + ".");
+                return;
+            }
+            Task task = tasks.get(taskIndex);
+            if (isCompleted) {
+                task.markCompleted();
+                msgWithDivider("Yippy! " + (taskIndex + 1) + ": " + task + " has been mark completed.");
+            } else {
+                task.markUncompleted();
+                msgWithDivider("Aww! " + (taskIndex + 1) + ": " + task + " has been marked uncompleted.");
+            }
+        } catch (NumberFormatException e) {
+            msgWithDivider("what theee, your number is way too big!");
         }
-
     }
 }
