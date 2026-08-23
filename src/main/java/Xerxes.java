@@ -16,12 +16,12 @@ public class Xerxes {
         List<Task> tasks = new ArrayList<>();
         initialMsg();
 
-        boolean active = true;
-        while (active) {
+        boolean isActive = true;
+        while (isActive) {
             String userMsg = scanner.nextLine();
 
             if (Objects.equals(userMsg, "bye")) {
-                active = false;
+                isActive = false;
             } else if (Objects.equals(userMsg, "list")) {
                 printTaskList(tasks);
             } else if (userMsg.matches("mark \\d+")) {
@@ -29,7 +29,7 @@ public class Xerxes {
             } else if (userMsg.matches("unmark \\d+")) {
                 handleTaskStatus(tasks, userMsg, false);
             } else if (userMsg.startsWith("todo ")) {
-                handleAddToDo(tasks,userMsg);
+                handleAddToDo(tasks, userMsg);
             } else if (userMsg.startsWith("deadline ")) {
                 handleAddDeadline(tasks, userMsg);
             } else if (userMsg.startsWith("event ")) {
@@ -87,7 +87,7 @@ public class Xerxes {
         }
     }
 
-    public static void handleAddToDo(List<Task> tasks, String userMsg){
+    public static void handleAddToDo(List<Task> tasks, String userMsg) {
         String taskName = userMsg.substring(5).trim();
         if (taskName.isEmpty()) {
             msgWithDivider("yoo the task name cannot be empty man");
@@ -98,7 +98,7 @@ public class Xerxes {
         msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
     }
 
-    public static void handleAddDeadline(List<Task> tasks, String userMsg){
+    public static void handleAddDeadline(List<Task> tasks, String userMsg) {
         String taskNameAndDeadline = userMsg.substring(9).trim();
         if (!taskNameAndDeadline.contains(" /by ")) {
             msgWithDivider("yoo yr format cmi must use : deadline <description> /by <time>");
@@ -116,7 +116,7 @@ public class Xerxes {
         msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
     }
 
-    public static void handleAddEvent(List<Task> tasks, String userMsg){
+    public static void handleAddEvent(List<Task> tasks, String userMsg) {
         String eventAndDuration = userMsg.substring(6).trim();
 
         if (!eventAndDuration.contains(" /from ") || !eventAndDuration.contains(" /to ")) {
@@ -151,6 +151,6 @@ public class Xerxes {
 
         Task task = tasks.get(index - 1);
         msgWithDivider("got it! " + task + " has been removed");
-        tasks.remove (index - 1);
+        tasks.remove(index - 1);
     }
 }

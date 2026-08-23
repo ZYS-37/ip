@@ -1,22 +1,22 @@
 public class Task {
     private String taskName;
-    private boolean completed;
+    private boolean isCompleted;
 
     public Task(String taskName) {
         this.taskName = taskName;
     }
 
     public void markCompleted() {
-        this.completed = true;
+        this.isCompleted = true;
     }
 
     public void markUncompleted() {
-        this.completed = false;
+        this.isCompleted = false;
     }
 
     @Override
-    public String toString () {
-        if (completed) {
+    public String toString() {
+        if (this.isCompleted) {
             return "[X] " + this.taskName;
         } else {
             return "[ ] " + this.taskName;
