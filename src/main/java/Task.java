@@ -14,6 +14,14 @@ public class Task {
         this.isCompleted = false;
     }
 
+    public boolean getIsCompleted() {
+        return this.isCompleted;
+    }
+
+    public String getTaskName() {
+        return this.taskName;
+    }
+
     @Override
     public String toString() {
         if (this.isCompleted) {
