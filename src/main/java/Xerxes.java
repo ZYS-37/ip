@@ -1,7 +1,12 @@
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Xerxes {
     public static final String DIVIDER = "____________________________________________________________";
@@ -10,11 +15,13 @@ public class Xerxes {
             + " \\  /  / _ \\| '__|\\ \\/ / / _ \\/ __|\n"
             + " /  \\ |  __/| |    >  < |  __/\\__ \\\n"
             + "/_/\\_\\ \\___||_|   /_/\\_\\ \\___||___/";
+    private static final String SAVE_FILE_PATH = "data/Xerxes.txt";
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
+        TaskStorage taskStorage = new TaskStorage();
         initialMsg();
+        List<Task> tasks = loadSaveFile(taskStorage);
 
         boolean isActive = true;
         while (isActive) {
@@ -24,6 +31,8 @@ public class Xerxes {
                 isActive = false;
             } else if (Objects.equals(userMsg, "list")) {
                 printTaskList(tasks);
+            } else if (Objects.equals(userMsg, "save")) {
+                saveTasks(taskStorage, tasks);
             } else if (userMsg.matches("mark \\d+")) {
                 handleTaskStatus(tasks, userMsg, true);
             } else if (userMsg.matches("unmark \\d+")) {
@@ -152,5 +161,38 @@ public class Xerxes {
         Task task = tasks.get(index - 1);
         msgWithDivider("got it! " + task + " has been removed");
         tasks.remove(index - 1);
+    }
+
+    public static List<Task> loadSaveFile(TaskStorage taskStorage) {
+        // Handle creation of directory and file if it does not exists
+        Path filePath = Paths.get(SAVE_FILE_PATH);
+        try {
+            if (filePath.getParent() != null) {
+                Files.createDirectories(filePath.getParent());
+            }
+
+            if (Files.notExists(filePath)) {
+                Files.createFile(filePath);
+                System.out.println("Directory and file have been created");
+            }
+        } catch (IOException e) {
+            System.err.println("Error has occurred" + e.getMessage());
+        }
+        try {
+            List<Task> tasks = taskStorage.load(filePath);
+            msgWithDivider("Tasks have been loaded!");
+            return tasks;
+        } catch (IOException e) {
+            System.err.println("Unable to load save file, starting with an empty task list.");
+            return new ArrayList<>();
+        } catch (IllegalArgumentException e) {
+            System.err.println("Save file is corrupted." + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public static void saveTasks(TaskStorage taskStorage, List<Task> tasks) {
+        taskStorage.save(tasks, SAVE_FILE_PATH);
+        msgWithDivider("Yr tasks have been saved!");
     }
 }
