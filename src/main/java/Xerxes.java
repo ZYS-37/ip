@@ -1,12 +1,14 @@
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
 
 public class Xerxes {
     public static final String DIVIDER = "____________________________________________________________";
@@ -16,6 +18,8 @@ public class Xerxes {
             + " /  \\ |  __/| |    >  < |  __/\\__ \\\n"
             + "/_/\\_\\ \\___||_|   /_/\\_\\ \\___||___/";
     private static final String SAVE_FILE_PATH = "data/Xerxes.txt";
+    private static final DateTimeFormatter INPUT_FORMAT =
+            DateTimeFormatter.ofPattern("d/M/uuuu");
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -115,8 +119,9 @@ public class Xerxes {
         }
         String[] parts = taskNameAndDeadline.split(" /by ");
         String taskName = parts[0];
-        String deadline = parts[1];
-        if (taskName.isEmpty() || deadline.isEmpty()) {
+        LocalDate deadline = formatDate(parts[1]);
+
+        if (taskName.isEmpty()) {
             msgWithDivider("yoo the both the task name and deadline must be there");
             return;
         }
@@ -146,23 +151,27 @@ public class Xerxes {
         String taskName = eventAndDuration
                 .substring(0, fromIndex)
                 .trim();
+        try {
+            LocalDate startTime = formatDate(eventAndDuration
+                    .substring(fromIndex + fromMarker.length(), toIndex)
+                    .trim());
 
-        String startTime = eventAndDuration
-                .substring(fromIndex + fromMarker.length(), toIndex)
-                .trim();
+            LocalDate endTime = formatDate(eventAndDuration
+                    .substring(toIndex + toMarker.length())
+                    .trim());
+            if (taskName.isEmpty()) {
+                msgWithDivider("yoo you must have a task name, a start time and an end time");
+            }
 
-        String endTime = eventAndDuration
-                .substring(toIndex + toMarker.length())
-                .trim();
+            Event task = new Event(taskName, startTime, endTime);
+            tasks.add(task);
 
-        if (taskName.isEmpty() || startTime.isEmpty() || endTime.isEmpty()) {
-            msgWithDivider("yoo you must have a task name, a start time and an end time");
-            return;
+            msgWithDivider("Gotcha boss, the event: " + task + " has been added!");
+        } catch (IllegalArgumentException e) {
+            msgWithDivider(e.getMessage());
         }
 
-        Event task = new Event(taskName, startTime, endTime);
-        tasks.add(task);
-        msgWithDivider("Gotcha boss, the event: " + task + " has been added!");
+
     }
 
     public static void handleDeletion(List<Task> tasks, String userMsg) {
@@ -205,7 +214,7 @@ public class Xerxes {
             System.err.println("Unable to load save file, starting with an empty task list.");
             return new ArrayList<>();
         } catch (IllegalArgumentException e) {
-            System.err.println("Save file is corrupted." + e.getMessage());
+            System.err.println("Save file is corrupted: " + e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -216,6 +225,14 @@ public class Xerxes {
             msgWithDivider("Yr tasks have been saved!");
         } catch (IOException e) {
             System.err.println("An error has occurred while saving!");
+        }
+    }
+
+    public static LocalDate formatDate(String rawDate) throws DateTimeParseException {
+        try {
+            return LocalDate.parse(rawDate, INPUT_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid date/time format. Use: d/M/yyyy");
         }
     }
 }

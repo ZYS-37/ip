@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
@@ -6,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class TaskStorage {
     public void save(List<Task> tasks, String saveFilePath) throws IOException{
@@ -32,7 +35,7 @@ public class TaskStorage {
                 tasks.add(decode(line));
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException(
-                        "Malformed save file at line " + (lineNum + 1) +
+                        "Malformed save file at line " + (lineNum + 1) +": "+
                         e.getMessage(), e);
             }
         }
@@ -59,14 +62,14 @@ public class TaskStorage {
                     "DEADLINE",
                     status,
                     description,
-                    encodeField(deadline.getDeadline()));
+                    encodeField(deadline.getDeadline().format(DateTimeFormatter.BASIC_ISO_DATE)));
             case Event event-> String.join(
                     "|",
                     "EVENT",
                     status,
                     description,
-                    encodeField(event.getStartTime()),
-                    encodeField(event.getEndTime()));
+                    encodeField(event.getStartTime().format(DateTimeFormatter.BASIC_ISO_DATE)),
+                    encodeField(event.getEndTime().format(DateTimeFormatter.BASIC_ISO_DATE)));
 
             case null -> throw new IllegalArgumentException("Task cannot be null");
 
@@ -97,11 +100,14 @@ public class TaskStorage {
             }
             case "DEADLINE" -> {
                 requireFieldCount(fields, 4);
-                yield new Deadline(description, fields.get(3));
+                yield new Deadline(description,
+                        parseSavedDate(fields.get(3), "deadline"));
             }
             case "EVENT" -> {
                 requireFieldCount(fields, 5);
-                yield new Event(description, fields.get(3), fields.get(4));
+                yield new Event(description,
+                        parseSavedDate(fields.get(3), "event start time"),
+                        parseSavedDate(fields.get(4), "event end time"));
             }
             default -> throw new IllegalArgumentException("Unknown task type: " + type);
         };
@@ -150,5 +156,13 @@ public class TaskStorage {
 
         fields.add(currentField.toString());
         return fields;
+    }
+    private LocalDate parseSavedDate(String value, String fieldName) {
+        try{
+            return LocalDate.parse(value);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(
+                    "Invalid " + fieldName  + ": " + value, e);
+        }
     }
 }
