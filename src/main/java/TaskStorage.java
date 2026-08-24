@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class TaskStorage {
-    public void save(List<Task> tasks, String saveFilePath) throws IOException{
+    public void save(TaskList tasks, String saveFilePath) throws IOException{
         File saveFile = new File(saveFilePath);
         BufferedWriter saveFileWriter = new BufferedWriter(new FileWriter(saveFile));
         for (Task task: tasks) {
@@ -62,14 +62,14 @@ public class TaskStorage {
                     "DEADLINE",
                     status,
                     description,
-                    encodeField(deadline.getDeadline().format(DateTimeFormatter.BASIC_ISO_DATE)));
+                    encodeField(deadline.getDeadline().format(DateTimeFormatter.ISO_LOCAL_DATE)));
             case Event event-> String.join(
                     "|",
                     "EVENT",
                     status,
                     description,
-                    encodeField(event.getStartTime().format(DateTimeFormatter.BASIC_ISO_DATE)),
-                    encodeField(event.getEndTime().format(DateTimeFormatter.BASIC_ISO_DATE)));
+                    encodeField(event.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE)),
+                    encodeField(event.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE)));
 
             case null -> throw new IllegalArgumentException("Task cannot be null");
 
@@ -159,7 +159,7 @@ public class TaskStorage {
     }
     private LocalDate parseSavedDate(String value, String fieldName) {
         try{
-            return LocalDate.parse(value);
+            return LocalDate.parse(value,DateTimeFormatter.ISO_LOCAL_DATE);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(
                     "Invalid " + fieldName  + ": " + value, e);

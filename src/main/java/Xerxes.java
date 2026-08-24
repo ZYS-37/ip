@@ -25,7 +25,8 @@ public class Xerxes {
         Scanner scanner = new Scanner(System.in);
         TaskStorage taskStorage = new TaskStorage();
         initialMsg();
-        List<Task> tasks = loadSaveFile(taskStorage);
+
+        TaskList tasks = new TaskList(loadSaveFile(taskStorage));
 
         boolean isActive = true;
         while (isActive) {
@@ -70,48 +71,39 @@ public class Xerxes {
         msgWithDivider("Yo wassup! I'm Xerxes.\nWhat do ya need?");
     }
 
-    public static void printTaskList(List<Task> tasks) {
-        int i = 1;
-        for (Task task : tasks) {
-            System.out.println((i) + ": " + task);
-            i++;
-        }
-        printDivider();
+    public static void printTaskList(TaskList tasks) {
+        msgWithDivider(tasks.toString());
     }
 
-    public static void handleTaskStatus(List<Task> tasks, String input, boolean isCompleted) {
+    public static void handleTaskStatus(TaskList tasks , String input, boolean isCompleted) {
         try {
             String msgNum = input.split(" ")[1];
             int taskIndex = Integer.parseInt(msgNum) - 1;
-            if (taskIndex < 0 || taskIndex >= tasks.size()) {
-                msgWithDivider("Invalid task number! Please provide an index between 1 and " + tasks.size() + ".");
-                return;
-            }
-            Task task = tasks.get(taskIndex);
+            Task task = tasks.handleCompletionStatus(taskIndex, isCompleted);
             if (isCompleted) {
-                task.markCompleted();
                 msgWithDivider("Yippy! " + (taskIndex + 1) + ": " + task + " has been mark completed.");
             } else {
-                task.markUncompleted();
-                msgWithDivider("Aww! " + (taskIndex + 1) + ": " + task + " has been marked uncompleted.");
+                msgWithDivider("Awww " + (taskIndex + 1) + ": " + task + " has been mark uncompleted. :(");
             }
         } catch (NumberFormatException e) {
             msgWithDivider("what theee, your number is way too big!");
+        } catch (IllegalArgumentException e) {
+            msgWithDivider(e.getMessage());
         }
     }
 
-    public static void handleAddToDo(List<Task> tasks, String userMsg) {
+    public static void handleAddToDo(TaskList tasks, String userMsg) {
         String taskName = userMsg.substring(5).trim();
         if (taskName.isEmpty()) {
             msgWithDivider("yoo the task name cannot be empty man");
             return;
         }
         ToDo task = new ToDo(taskName);
-        tasks.add(task);
+        tasks.addTask(task);
         msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
     }
 
-    public static void handleAddDeadline(List<Task> tasks, String userMsg) {
+    public static void handleAddDeadline(TaskList tasks, String userMsg) {
         String taskNameAndDeadline = userMsg.substring(9).trim();
         if (!taskNameAndDeadline.contains(" /by ")) {
             msgWithDivider("yoo yr format cmi must use : deadline <description> /by <time>");
@@ -126,11 +118,11 @@ public class Xerxes {
             return;
         }
         Deadline task = new Deadline(taskName, deadline);
-        tasks.add(task);
+        tasks.addTask(task);
         msgWithDivider("Gotcha boss, the task: " + task + " has been added!");
     }
 
-    public static void handleAddEvent(List<Task> tasks, String userMsg) {
+    public static void handleAddEvent(TaskList tasks, String userMsg) {
         String eventAndDuration = userMsg.substring(6).trim();
 
         String fromMarker = " /from ";
@@ -161,10 +153,11 @@ public class Xerxes {
                     .trim());
             if (taskName.isEmpty()) {
                 msgWithDivider("yoo you must have a task name, a start time and an end time");
+                return;
             }
 
             Event task = new Event(taskName, startTime, endTime);
-            tasks.add(task);
+            tasks.addTask(task);
 
             msgWithDivider("Gotcha boss, the event: " + task + " has been added!");
         } catch (IllegalArgumentException e) {
@@ -174,21 +167,16 @@ public class Xerxes {
 
     }
 
-    public static void handleDeletion(List<Task> tasks, String userMsg) {
+    public static void handleDeletion(TaskList tasks, String userMsg) {
        try {
             int index = Integer.parseInt(userMsg.substring(7).trim()) - 1;
-
-            if (index < 0 || index >= tasks.size()) {
-                msgWithDivider("Invalid task number! Please provide an index between 1 and " + tasks.size() + ".");
-                return;
-            }
-
-            Task task = tasks.get(index - 1);
+            Task task = tasks.deleteTask(index);
             msgWithDivider("got it! " + task + " has been removed");
-            tasks.remove(index - 1);
         } catch (NumberFormatException e) {
             msgWithDivider("what theee, your delete index is way too big!");
-        }
+        } catch (IllegalArgumentException e) {
+           msgWithDivider(e.getMessage());
+       }
     }
 
     public static List<Task> loadSaveFile(TaskStorage taskStorage) {
@@ -219,7 +207,7 @@ public class Xerxes {
         }
     }
 
-    public static void saveTasks(TaskStorage taskStorage, List<Task> tasks) {
+    public static void saveTasks(TaskStorage taskStorage, TaskList tasks) {
         try {
             taskStorage.save(tasks, SAVE_FILE_PATH);
             msgWithDivider("Yr tasks have been saved!");
