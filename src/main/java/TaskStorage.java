@@ -8,20 +8,15 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 
 public class TaskStorage {
-    public void save(List<Task> tasks, String saveFilePath) {
+    public void save(List<Task> tasks, String saveFilePath) throws IOException{
         File saveFile = new File(saveFilePath);
-
-        try {
-            BufferedWriter saveFileWriter = new BufferedWriter(new FileWriter(saveFile));
-            for (Task task: tasks) {
-                saveFileWriter.write(encode(task));
-                saveFileWriter.newLine();
-            }
-            saveFileWriter.close();
-
-        } catch (IOException e) {
-            System.err.println("An error has occurred " + e.getMessage());
+        BufferedWriter saveFileWriter = new BufferedWriter(new FileWriter(saveFile));
+        for (Task task: tasks) {
+            saveFileWriter.write(encode(task));
+            saveFileWriter.newLine();
         }
+        saveFileWriter.close();
+
     }
 
     public List<Task> load(Path saveFilePath) throws IOException {

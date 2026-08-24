@@ -150,21 +150,24 @@ public class Xerxes {
     }
 
     public static void handleDeletion(List<Task> tasks, String userMsg) {
+       try {
+            int index = Integer.parseInt(userMsg.substring(7).trim()) - 1;
 
-        int index = Integer.parseInt(userMsg.substring(7).trim());
+            if (index < 0 || index >= tasks.size()) {
+                msgWithDivider("Invalid task number! Please provide an index between 1 and " + tasks.size() + ".");
+                return;
+            }
 
-        if (index < 0 || index >= tasks.size()) {
-            msgWithDivider("Invalid task number! Please provide an index between 1 and " + tasks.size() + ".");
-            return;
+            Task task = tasks.get(index - 1);
+            msgWithDivider("got it! " + task + " has been removed");
+            tasks.remove(index - 1);
+        } catch (NumberFormatException e) {
+            msgWithDivider("what theee, your delete index is way too big!");
         }
-
-        Task task = tasks.get(index - 1);
-        msgWithDivider("got it! " + task + " has been removed");
-        tasks.remove(index - 1);
     }
 
     public static List<Task> loadSaveFile(TaskStorage taskStorage) {
-        // Handle creation of directory and file if it does not exists
+        // Handle creation of directory and file if it does not exist
         Path filePath = Paths.get(SAVE_FILE_PATH);
         try {
             if (filePath.getParent() != null) {
@@ -192,7 +195,11 @@ public class Xerxes {
     }
 
     public static void saveTasks(TaskStorage taskStorage, List<Task> tasks) {
-        taskStorage.save(tasks, SAVE_FILE_PATH);
-        msgWithDivider("Yr tasks have been saved!");
+        try {
+            taskStorage.save(tasks, SAVE_FILE_PATH);
+            msgWithDivider("Yr tasks have been saved!");
+        } catch (IOException e) {
+            System.err.println("An error has occurred while saving!");
+        }
     }
 }
