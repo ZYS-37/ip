@@ -11,8 +11,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class TaskStorage {
-    public void save(List<Task> tasks, String saveFilePath) throws IOException{
-        File saveFile = new File(saveFilePath);
+    private String savefilePath;
+
+    public TaskStorage (String savefilePath) {
+        this.savefilePath = savefilePath;
+    }
+
+
+    public void save(TaskList tasks) throws IOException{
+        File saveFile = new File(this.savefilePath);
         BufferedWriter saveFileWriter = new BufferedWriter(new FileWriter(saveFile));
         for (Task task: tasks) {
             saveFileWriter.write(encode(task));
@@ -22,22 +29,39 @@ public class TaskStorage {
 
     }
 
-    public List<Task> load(Path saveFilePath) throws IOException {
-        List<Task> tasks = new ArrayList<>();
-        List<String> lines = Files.readAllLines(saveFilePath);
-        for (int lineNum = 0; lineNum < lines.size(); lineNum++) {
-            String line = lines.get(lineNum);
+    public List<Task> load() throws IOException {
+        Path filePath = Path.of(this.savefilePath);
+        try {
+            if (filePath.getParent() != null) {
+                Files.createDirectories(filePath.getParent());
+            }
 
-            if (line.isBlank()) {
-                continue;
+            if (Files.notExists(filePath)) {
+                Files.createFile(filePath);
             }
-            try {
-                tasks.add(decode(line));
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(
-                        "Malformed save file at line " + (lineNum + 1) +": "+
-                        e.getMessage(), e);
+        } catch (IOException e) {
+            System.err.println("Error has occurred" + e.getMessage());
+        }
+        List<Task> tasks = new ArrayList<>();
+        try {
+            List<String> lines = Files.readAllLines(filePath);
+
+            for (int lineNum = 0; lineNum < lines.size(); lineNum++) {
+                String line = lines.get(lineNum);
+
+                if (line.isBlank()) {
+                    continue;
+                }
+                try {
+                    tasks.add(decode(line));
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException(
+                            "Malformed save file at line " + (lineNum + 1) +": "+
+                                    e.getMessage(), e);
+                }
             }
+        } catch (IOException e){
+            throw new IOException("Unable to load save file, starting with an empty task list.");
         }
         return tasks;
     }
@@ -62,14 +86,14 @@ public class TaskStorage {
                     "DEADLINE",
                     status,
                     description,
-                    encodeField(deadline.getDeadline().format(DateTimeFormatter.BASIC_ISO_DATE)));
+                    encodeField(deadline.getDeadline().format(DateTimeFormatter.ISO_LOCAL_DATE)));
             case Event event-> String.join(
                     "|",
                     "EVENT",
                     status,
                     description,
-                    encodeField(event.getStartTime().format(DateTimeFormatter.BASIC_ISO_DATE)),
-                    encodeField(event.getEndTime().format(DateTimeFormatter.BASIC_ISO_DATE)));
+                    encodeField(event.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE)),
+                    encodeField(event.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE)));
 
             case null -> throw new IllegalArgumentException("Task cannot be null");
 
@@ -159,7 +183,7 @@ public class TaskStorage {
     }
     private LocalDate parseSavedDate(String value, String fieldName) {
         try{
-            return LocalDate.parse(value);
+            return LocalDate.parse(value,DateTimeFormatter.ISO_LOCAL_DATE);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(
                     "Invalid " + fieldName  + ": " + value, e);
