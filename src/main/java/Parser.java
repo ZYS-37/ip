@@ -88,7 +88,7 @@ public class Parser {
             taskStorage.save(tasks);
             ui.showMessage("Yr tasks have been saved!");
         } catch (IOException e) {
-            System.err.println("An error has occurred while saving!");
+            ui.showError("An error has occurred while saving!");
         }
     }
 

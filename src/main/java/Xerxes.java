@@ -17,6 +17,9 @@ public class Xerxes {
         } catch (IOException e) {
             ui.showTopError("Save file has failed to load: " + e.getMessage());
             tasks = new TaskList();
+        } catch (IllegalArgumentException e) {
+            ui.showTopError("Save file has been corrupted: " + e.getMessage());
+            tasks = new TaskList();
         }
         this.parser = new Parser(ui, taskStorage);
     }
