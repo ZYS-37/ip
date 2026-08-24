@@ -30,6 +30,15 @@ public class Ui {
         printDivider();
     }
 
+    public void showTopMessage(String message) {
+        printDivider();
+        System.out.println(message);
+    }
+
+    public void showTopError(String message) {
+        showTopMessage(message);
+    }
+
     public void showError(String message) {
         showMessage(message);
     }
