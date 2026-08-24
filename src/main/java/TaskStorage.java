@@ -5,15 +5,17 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.FileWriter;
+import java.io.BufferedWriter;
 
 public class TaskStorage {
     public void save(List<Task> tasks, String saveFilePath) {
         File saveFile = new File(saveFilePath);
 
         try {
-            FileWriter saveFileWriter = new FileWriter(saveFile);
+            BufferedWriter saveFileWriter = new BufferedWriter(new FileWriter(saveFile));
             for (Task task: tasks) {
                 saveFileWriter.write(encode(task));
+                saveFileWriter.newLine();
             }
             saveFileWriter.close();
 
@@ -35,7 +37,8 @@ public class TaskStorage {
                 tasks.add(decode(line));
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException(
-                        "Malformed save file at line " + (lineNum + 1), e);
+                        "Malformed save file at line " + (lineNum + 1) +
+                        e.getMessage(), e);
             }
         }
         return tasks;
@@ -58,13 +61,13 @@ public class TaskStorage {
                     description);
             case Deadline deadline-> String.join(
                     "|",
-                    "TODO",
+                    "DEADLINE",
                     status,
                     description,
                     encodeField(deadline.getDeadline()));
             case Event event-> String.join(
                     "|",
-                    "TODO",
+                    "EVENT",
                     status,
                     description,
                     encodeField(event.getStartTime()),
