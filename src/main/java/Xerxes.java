@@ -128,16 +128,32 @@ public class Xerxes {
     public static void handleAddEvent(List<Task> tasks, String userMsg) {
         String eventAndDuration = userMsg.substring(6).trim();
 
-        if (!eventAndDuration.contains(" /from ") || !eventAndDuration.contains(" /to ")) {
-            msgWithDivider("yoo yr format cmi must use : event <description> /from <start> /to <end>");
+        String fromMarker = " /from ";
+        String toMarker = " /to ";
+
+        int fromIndex = eventAndDuration.indexOf(fromMarker);
+        int toIndex = eventAndDuration.indexOf(
+                toMarker,
+                fromIndex + fromMarker.length());
+
+
+        if (fromIndex < 0 || toIndex < 0 || toIndex <= fromIndex + fromMarker.length()) {
+            msgWithDivider(
+                    "The format must be: event <description> /from <start> /to <end>");
             return;
         }
-        String[] parts1 = eventAndDuration.split(" /from ");
-        String taskName = parts1[0];
-        String duration = parts1[1];
-        String[] parts2 = duration.split(" /to ");
-        String startTime = parts2[0];
-        String endTime = parts2[1];
+
+        String taskName = eventAndDuration
+                .substring(0, fromIndex)
+                .trim();
+
+        String startTime = eventAndDuration
+                .substring(fromIndex + fromMarker.length(), toIndex)
+                .trim();
+
+        String endTime = eventAndDuration
+                .substring(toIndex + toMarker.length())
+                .trim();
 
         if (taskName.isEmpty() || startTime.isEmpty() || endTime.isEmpty()) {
             msgWithDivider("yoo you must have a task name, a start time and an end time");
