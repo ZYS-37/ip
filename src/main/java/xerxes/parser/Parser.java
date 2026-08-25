@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.List;
 
 
 public class Parser {
@@ -40,6 +41,11 @@ public class Parser {
         }
         if (input.equals("save")) {
             handleSaveTasks(taskStorage, tasks);
+            return true;
+        }
+
+        if (input.equals("find") || input.startsWith("find ")) {
+            handleFindTasks(input, tasks);
             return true;
         }
 
@@ -75,6 +81,24 @@ public class Parser {
 
         ui.showError("I dont gets, not going to do anth.");
         return true;
+    }
+
+    /**
+     * Searches the task list using the keyword in a find command and displays the results.
+     *
+     * @param input find command entered by the user.
+     * @param tasks task list to search.
+     */
+    private void handleFindTasks(String input, TaskList tasks) {
+        String keyword = input.length() > 4 ? input.substring(5).trim() : "";
+
+        if (keyword.isEmpty()) {
+            ui.showError("Please provide a keyword to search for.");
+            return;
+        }
+
+        List<Task> matchingTasks = tasks.findMatchingTasks(keyword);
+        ui.showMatchingTasks(matchingTasks);
     }
 
     private void handleTaskStatus(String input, TaskList tasks, boolean isCompleted) {
