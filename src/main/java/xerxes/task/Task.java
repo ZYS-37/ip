@@ -1,7 +1,7 @@
 package xerxes.task;
 
 public class Task {
-    private String taskName;
+    private final String taskName;
     private boolean isCompleted;
 
     public Task(String taskName) {
@@ -16,7 +16,7 @@ public class Task {
         this.isCompleted = false;
     }
 
-    public boolean getIsCompleted() {
+    public boolean isCompleted() {
         return this.isCompleted;
     }
 

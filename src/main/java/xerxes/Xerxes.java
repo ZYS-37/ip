@@ -1,33 +1,35 @@
 package xerxes;
 
+import java.io.IOException;
+
 import xerxes.parser.Parser;
 import xerxes.storage.TaskStorage;
 import xerxes.task.TaskList;
 import xerxes.ui.Ui;
 
-import java.io.IOException;
-
 public class Xerxes {
     private static final String SAVE_FILE_PATH = "data/Xerxes.txt";
-    private TaskStorage taskStorage;
-    private TaskList tasks;
-    private Ui ui;
-    private Parser parser;
+    private final TaskStorage taskStorage;
+    private final TaskList tasks;
+    private final Ui ui;
+    private final Parser parser;
 
     public Xerxes(String filePath) {
         this.ui = new Ui();
         this.taskStorage = new TaskStorage(filePath);
+        TaskList loadedTasks;
 
         try {
-            tasks = new TaskList(taskStorage.load());
+            loadedTasks = new TaskList(taskStorage.load());
             ui.showTopMessage("Save file has been loaded");
         } catch (IOException e) {
             ui.showTopError("Save file has failed to load: " + e.getMessage());
-            tasks = new TaskList();
+            loadedTasks = new TaskList();
         } catch (IllegalArgumentException e) {
             ui.showTopError("Save file has been corrupted: " + e.getMessage());
-            tasks = new TaskList();
+            loadedTasks = new TaskList();
         }
+        this.tasks = loadedTasks;
         this.parser = new Parser(ui, taskStorage);
     }
 

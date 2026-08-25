@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Event extends Task {
-    private LocalDate startTime;
-    private LocalDate endTime;
+    private final LocalDate startTime;
+    private final LocalDate endTime;
     private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
     public Event(String taskName, LocalDate startTime, LocalDate endTime) {

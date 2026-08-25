@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class TaskList implements Iterable<Task>{
-    private List<Task> tasks;
+public class TaskList implements Iterable<Task> {
+    private final List<Task> tasks;
 
     public TaskList() {
         this.tasks = new ArrayList<>();
@@ -46,6 +46,7 @@ public class TaskList implements Iterable<Task>{
     public void addTask(Task task) {
         this.tasks.add(task);
     }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

@@ -1,26 +1,25 @@
 package xerxes.parser;
 
-import xerxes.storage.TaskStorage;
-import xerxes.task.TaskList;
-import xerxes.task.Task;
-import xerxes.task.ToDo;
-import xerxes.task.Deadline;
-import xerxes.task.Event;
-import xerxes.ui.Ui;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
+import xerxes.storage.TaskStorage;
+import xerxes.task.Deadline;
+import xerxes.task.Event;
+import xerxes.task.Task;
+import xerxes.task.TaskList;
+import xerxes.task.ToDo;
+import xerxes.ui.Ui;
 
 public class Parser {
     private static final DateTimeFormatter INPUT_FORMAT =
             DateTimeFormatter.ofPattern("d/M/uuuu")
-                    .withResolverStyle(ResolverStyle.STRICT);;
-    private Ui ui;
-    private TaskStorage taskStorage;
+                    .withResolverStyle(ResolverStyle.STRICT);
+    private final Ui ui;
+    private final TaskStorage taskStorage;
 
     public Parser(Ui ui, TaskStorage taskStorage) {
         this.taskStorage = taskStorage;
@@ -94,7 +93,7 @@ public class Parser {
         }
     }
 
-    public  void handleSaveTasks(TaskStorage taskStorage, TaskList tasks) {
+    public void handleSaveTasks(TaskStorage taskStorage, TaskList tasks) {
         try {
             taskStorage.save(tasks);
             ui.showMessage("Yr tasks have been saved!");
@@ -199,7 +198,7 @@ public class Parser {
 
     }
 
-    public static LocalDate formatDate(String rawDate) throws DateTimeParseException {
+    public static LocalDate formatDate(String rawDate) {
         try {
             return LocalDate.parse(rawDate, INPUT_FORMAT);
         } catch (DateTimeParseException e) {

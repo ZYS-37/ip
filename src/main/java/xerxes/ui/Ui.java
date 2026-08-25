@@ -1,4 +1,5 @@
 package xerxes.ui;
+
 import java.util.Scanner;
 
 public class Ui {
