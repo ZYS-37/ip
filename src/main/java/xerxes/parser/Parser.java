@@ -15,18 +15,39 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
 
+/**
+ * Interprets user commands and performs the corresponding task-list operations.
+ */
 public class Parser {
+    /** Strict date format accepted for deadline and event commands. */
     private static final DateTimeFormatter INPUT_FORMAT =
             DateTimeFormatter.ofPattern("d/M/uuuu")
                     .withResolverStyle(ResolverStyle.STRICT);;
+
+    /** User interface used to display command results and errors. */
     private Ui ui;
+
+    /** Storage used when the user requests that tasks be saved. */
     private TaskStorage taskStorage;
 
+    /**
+     * Creates a parser that reports results through the given UI and saves through the given storage.
+     *
+     * @param ui User interface for command feedback.
+     * @param taskStorage Storage used to persist tasks.
+     */
     public Parser(Ui ui, TaskStorage taskStorage) {
         this.taskStorage = taskStorage;
         this.ui = ui;
     }
 
+    /**
+     * Processes one user command.
+     *
+     * @param input Command entered by the user.
+     * @param tasks Task list to query or modify.
+     * @return False only when the command requests application termination.
+     */
     public boolean handleCommand(String input, TaskList tasks) {
 
         if (input.equals("bye")) {
@@ -77,6 +98,13 @@ public class Parser {
         return true;
     }
 
+    /**
+     * Marks or unmarks the task identified by a command.
+     *
+     * @param input Mark or unmark command.
+     * @param tasks Task list containing the task.
+     * @param isCompleted True to mark the task, false to unmark it.
+     */
     private void handleTaskStatus(String input, TaskList tasks, boolean isCompleted) {
         try {
             String msgNum = input.split(" ")[1];
@@ -94,6 +122,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Saves the supplied tasks and reports the result to the user.
+     *
+     * @param taskStorage Storage that will save the tasks.
+     * @param tasks Tasks to save.
+     */
     public  void handleSaveTasks(TaskStorage taskStorage, TaskList tasks) {
         try {
             taskStorage.save(tasks);
@@ -103,6 +137,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Creates and adds a to-do task from a todo command.
+     *
+     * @param input Todo command.
+     * @param tasks Task list to update.
+     */
     private void handleAddTodo(String input, TaskList tasks) {
         String description = input.substring(5).trim();
 
@@ -116,6 +156,12 @@ public class Parser {
         ui.showMessage("Gotcha boss, the task: " + task + " has been added!");
     }
 
+    /**
+     * Creates and adds a deadline task from a deadline command.
+     *
+     * @param input Deadline command.
+     * @param tasks Task list to update.
+     */
     private void handleAddDeadline(String input, TaskList tasks) {
         String taskNameAndDeadline = input.substring(9).trim();
 
@@ -147,6 +193,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Creates and adds an event task from an event command.
+     *
+     * @param input Event command.
+     * @param tasks Task list to update.
+     */
     private void handleAddEvent(String input, TaskList tasks) {
         String eventAndDuration = input.substring(6).trim();
 
@@ -188,6 +240,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Removes the task identified by a delete command.
+     *
+     * @param input Delete command.
+     * @param tasks Task list to update.
+     */
     private void handleDeleteTask(String input, TaskList tasks) {
         try {
             int index = Integer.parseInt(input.substring(7).trim()) - 1;
@@ -199,6 +257,13 @@ public class Parser {
 
     }
 
+    /**
+     * Parses a user-entered date in {@code d/M/yyyy} format using strict calendar validation.
+     *
+     * @param rawDate Date text entered by the user.
+     * @return Parsed date.
+     * @throws IllegalArgumentException If the date is invalid or uses the wrong format.
+     */
     public static LocalDate formatDate(String rawDate) throws DateTimeParseException {
         try {
             return LocalDate.parse(rawDate, INPUT_FORMAT);

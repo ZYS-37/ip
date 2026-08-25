@@ -7,13 +7,33 @@ import xerxes.ui.Ui;
 
 import java.io.IOException;
 
+/**
+ * Coordinates the user interface, command parser, task list, and persistent storage
+ * for the Xerxes task manager.
+ */
 public class Xerxes {
+    /** Default location used to persist tasks when the application starts normally. */
     private static final String SAVE_FILE_PATH = "data/Xerxes.txt";
+
+    /** Stores and retrieves the application's tasks. */
     private TaskStorage taskStorage;
+
+    /** Contains the tasks managed during this application session. */
     private TaskList tasks;
+
+    /** Handles console input and output. */
     private Ui ui;
+
+    /** Interprets commands entered by the user. */
     private Parser parser;
 
+    /**
+     * Creates an application instance and loads tasks from the specified file.
+     * If the file cannot be read or contains malformed task data, the application
+     * starts with an empty task list instead.
+     *
+     * @param filePath Path of the task save file.
+     */
     public Xerxes(String filePath) {
         this.ui = new Ui();
         this.taskStorage = new TaskStorage(filePath);
@@ -31,6 +51,9 @@ public class Xerxes {
         this.parser = new Parser(ui, taskStorage);
     }
 
+    /**
+     * Displays the welcome message and repeatedly processes commands until the user exits.
+     */
     public void run() {
         ui.showInitialMessage();
         boolean isActive = true;
@@ -41,6 +64,11 @@ public class Xerxes {
         ui.close();
     }
 
+    /**
+     * Starts the Xerxes application using the default save-file location.
+     *
+     * @param args Command-line arguments, which are not currently used.
+     */
     public static void main(String[] args) {
         new Xerxes(SAVE_FILE_PATH).run();
     }
