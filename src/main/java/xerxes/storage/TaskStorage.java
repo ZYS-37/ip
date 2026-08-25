@@ -18,14 +18,29 @@ import java.io.BufferedWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Persists task lists to a text file and reconstructs tasks from that file.
+ */
 public class TaskStorage {
+    /** Path of the file used to store task data. */
     private String savefilePath;
 
+    /**
+     * Creates storage backed by the specified save file.
+     *
+     * @param savefilePath path of the save file
+     */
     public TaskStorage (String savefilePath) {
         this.savefilePath = savefilePath;
     }
 
 
+    /**
+     * Writes every task in the given list to the save file.
+     *
+     * @param tasks tasks to persist
+     * @throws IOException if the save file cannot be written
+     */
     public void save(TaskList tasks) throws IOException{
         File saveFile = new File(this.savefilePath);
         BufferedWriter saveFileWriter = new BufferedWriter(new FileWriter(saveFile));
@@ -37,6 +52,13 @@ public class TaskStorage {
 
     }
 
+    /**
+     * Creates the save file when necessary and loads each stored task from it.
+     *
+     * @return tasks decoded from the save file
+     * @throws IOException if the save file cannot be created or read
+     * @throws IllegalArgumentException if a saved task is malformed
+     */
     public List<Task> load() throws IOException {
         Path filePath = Path.of(this.savefilePath);
         try {
@@ -74,11 +96,24 @@ public class TaskStorage {
         return tasks;
     }
 
+    /**
+     * Escapes characters that have a special meaning in the save-file format.
+     *
+     * @param field unescaped field value
+     * @return escaped field value
+     */
     private String encodeField(String field) {
         return field.replace("\\", "\\\\")
                 .replace("|", "\\|");
     }
 
+    /**
+     * Converts a task into a single line in the save-file format.
+     *
+     * @param task task to encode
+     * @return encoded task line
+     * @throws IllegalArgumentException if the task type is unsupported
+     */
     private String encode(Task task) {
         String status = task.getIsCompleted() ? "1" : "0";
         String description = encodeField(task.getTaskName());
@@ -110,6 +145,13 @@ public class TaskStorage {
         };
     }
 
+    /**
+     * Reconstructs a task from one encoded save-file line.
+     *
+     * @param line encoded task line
+     * @return decoded task
+     * @throws IllegalArgumentException if the line has an invalid format
+     */
     private Task decode(String line) {
         List<String> fields = splitEscape(line);
         if (fields.size() < 3) {
@@ -151,12 +193,26 @@ public class TaskStorage {
         return task;
     }
 
+    /**
+     * Verifies that an encoded task has exactly the expected number of fields.
+     *
+     * @param fields decoded fields from the save-file line
+     * @param expected required number of fields
+     * @throws IllegalArgumentException if the field count differs from {@code expected}
+     */
     private void requireFieldCount(List<String> fields, int expected) {
         if (fields.size() != expected) {
             throw new IllegalArgumentException("Incorrect number of fields");
         }
     }
 
+    /**
+     * Splits an encoded save-file line at unescaped separators and unescapes its fields.
+     *
+     * @param line encoded task line
+     * @return decoded fields in their original order
+     * @throws IllegalArgumentException if the line contains an invalid escape sequence
+     */
     public List<String> splitEscape(String line) {
         List<String> fields = new ArrayList<>();
         StringBuilder currentField = new StringBuilder();
@@ -189,6 +245,15 @@ public class TaskStorage {
         fields.add(currentField.toString());
         return fields;
     }
+
+    /**
+     * Parses a date stored using the ISO local-date format.
+     *
+     * @param value encoded date value
+     * @param fieldName descriptive name used in any error message
+     * @return parsed date
+     * @throws IllegalArgumentException if the value is not a valid ISO local date
+     */
     private LocalDate parseSavedDate(String value, String fieldName) {
         try{
             return LocalDate.parse(value,DateTimeFormatter.ISO_LOCAL_DATE);
