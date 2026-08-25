@@ -1,17 +1,17 @@
 package xerxes.parser;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests date parsing performed by {@link Parser}.
  */
-class ParserTest {
 
+class ParserTest {
     /** Verifies that a correctly formatted date is converted to the expected value. */
     @Test
     void formatDate_validDate_returnsParsedDate() {

@@ -6,7 +6,7 @@ package xerxes.task;
  */
 public class Task {
     /** Description supplied by the user for this task. */
-    private String taskName;
+    private final String taskName;
 
     /** Whether this task has been completed. */
     private boolean isCompleted;
@@ -35,7 +35,7 @@ public class Task {
      *
      * @return True if the task is completed, otherwise false.
      */
-    public boolean getIsCompleted() {
+    public boolean isCompleted() {
         return this.isCompleted;
     }
 

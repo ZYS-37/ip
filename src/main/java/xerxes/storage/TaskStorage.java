@@ -1,39 +1,38 @@
 package xerxes.storage;
 
-import xerxes.task.Task;
-import xerxes.task.ToDo;
-import xerxes.task.Deadline;
-import xerxes.task.Event;
-import xerxes.task.TaskList;
-
-import java.io.IOException;
-import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.ArrayList;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+import xerxes.task.Deadline;
+import xerxes.task.Event;
+import xerxes.task.Task;
+import xerxes.task.TaskList;
+import xerxes.task.ToDo;
 
 /**
  * Persists task lists to a text file and reconstructs tasks from that file.
  */
 public class TaskStorage {
     /** Path of the file used to store task data. */
-    private String savefilePath;
+    private final String saveFilePath;
 
     /**
      * Creates storage backed by the specified save file.
      *
      * @param savefilePath Path of the save file.
      */
-    public TaskStorage(String savefilePath) {
-        this.savefilePath = savefilePath;
+    public TaskStorage(String saveFilePath) {
+        this.saveFilePath = saveFilePath;
     }
-
 
     /**
      * Writes every task in the given list to the save file.
@@ -41,10 +40,10 @@ public class TaskStorage {
      * @param tasks Tasks to persist.
      * @throws IOException If the save file cannot be written.
      */
-    public void save(TaskList tasks) throws IOException{
-        File saveFile = new File(this.savefilePath);
+    public void save(TaskList tasks) throws IOException {
+        File saveFile = new File(this.saveFilePath);
         BufferedWriter saveFileWriter = new BufferedWriter(new FileWriter(saveFile));
-        for (Task task: tasks) {
+        for (Task task : tasks) {
             saveFileWriter.write(encode(task));
             saveFileWriter.newLine();
         }
@@ -60,7 +59,7 @@ public class TaskStorage {
      * @throws IllegalArgumentException If a saved task is malformed.
      */
     public List<Task> load() throws IOException {
-        Path filePath = Path.of(this.savefilePath);
+        Path filePath = Path.of(this.saveFilePath);
         try {
             if (filePath.getParent() != null) {
                 Files.createDirectories(filePath.getParent());
@@ -86,11 +85,11 @@ public class TaskStorage {
                     tasks.add(decode(line));
                 } catch (IllegalArgumentException e) {
                     throw new IllegalArgumentException(
-                            "Malformed save file at line " + (lineNum + 1) +": "+
-                                    e.getMessage(), e);
+                            "Malformed save file at line " + (lineNum + 1) + ": "
+                                    + e.getMessage(), e);
                 }
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new IOException("Unable to load save file, starting with an empty task list.");
         }
         return tasks;
@@ -115,22 +114,22 @@ public class TaskStorage {
      * @throws IllegalArgumentException If the task type is unsupported.
      */
     private String encode(Task task) {
-        String status = task.getIsCompleted() ? "1" : "0";
+        String status = task.isCompleted() ? "1" : "0";
         String description = encodeField(task.getTaskName());
 
         return switch (task) {
-            case ToDo ignored-> String.join(
+            case ToDo ignored -> String.join(
                     "|",
                     "TODO",
                     status,
                     description);
-            case Deadline deadline-> String.join(
+            case Deadline deadline -> String.join(
                     "|",
                     "DEADLINE",
                     status,
                     description,
                     encodeField(deadline.getDeadline().format(DateTimeFormatter.ISO_LOCAL_DATE)));
-            case Event event-> String.join(
+            case Event event -> String.join(
                     "|",
                     "EVENT",
                     status,
@@ -219,7 +218,7 @@ public class TaskStorage {
         boolean isEscaping = false;
 
         // Handle Escapes
-        for (char character: line.toCharArray()) {
+        for (char character : line.toCharArray()) {
             if (isEscaping) {
                 if (character != '|' && character != '\\') {
                     throw new IllegalArgumentException(
@@ -255,11 +254,11 @@ public class TaskStorage {
      * @throws IllegalArgumentException If the value is not a valid ISO local date.
      */
     private LocalDate parseSavedDate(String value, String fieldName) {
-        try{
-            return LocalDate.parse(value,DateTimeFormatter.ISO_LOCAL_DATE);
+        try {
+            return LocalDate.parse(value, DateTimeFormatter.ISO_LOCAL_DATE);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(
-                    "Invalid " + fieldName  + ": " + value, e);
+                "Invalid " + fieldName + ": " + value, e);
         }
     }
 }

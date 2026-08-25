@@ -8,10 +8,10 @@ import java.time.format.DateTimeFormatter;
  */
 public class Event extends Task {
     /** Date on which this event begins. */
-    private LocalDate startTime;
+    private final LocalDate startTime;
 
     /** Date on which this event ends. */
-    private LocalDate endTime;
+    private final LocalDate endTime;
 
     /** Format used when displaying event dates to the user. */
     private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");

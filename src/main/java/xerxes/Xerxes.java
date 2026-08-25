@@ -1,11 +1,11 @@
 package xerxes;
 
+import java.io.IOException;
+
 import xerxes.parser.Parser;
 import xerxes.storage.TaskStorage;
 import xerxes.task.TaskList;
 import xerxes.ui.Ui;
-
-import java.io.IOException;
 
 /**
  * Coordinates the user interface, command parser, task list, and persistent storage
@@ -16,16 +16,16 @@ public class Xerxes {
     private static final String SAVE_FILE_PATH = "data/Xerxes.txt";
 
     /** Stores and retrieves the application's tasks. */
-    private TaskStorage taskStorage;
+    private final TaskStorage taskStorage;
 
     /** Contains the tasks managed during this application session. */
-    private TaskList tasks;
+    private final TaskList tasks;
 
     /** Handles console input and output. */
-    private Ui ui;
+    private final Ui ui;
 
     /** Interprets commands entered by the user. */
-    private Parser parser;
+    private final Parser parser;
 
     /**
      * Creates an application instance and loads tasks from the specified file.
@@ -37,17 +37,19 @@ public class Xerxes {
     public Xerxes(String filePath) {
         this.ui = new Ui();
         this.taskStorage = new TaskStorage(filePath);
+        TaskList loadedTasks;
 
         try {
-            tasks = new TaskList(taskStorage.load());
+            loadedTasks = new TaskList(taskStorage.load());
             ui.showTopMessage("Save file has been loaded");
         } catch (IOException e) {
             ui.showTopError("Save file has failed to load: " + e.getMessage());
-            tasks = new TaskList();
+            loadedTasks = new TaskList();
         } catch (IllegalArgumentException e) {
             ui.showTopError("Save file has been corrupted: " + e.getMessage());
-            tasks = new TaskList();
+            loadedTasks = new TaskList();
         }
+        this.tasks = loadedTasks;
         this.parser = new Parser(ui, taskStorage);
     }
 

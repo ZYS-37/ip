@@ -1,19 +1,18 @@
 package xerxes.parser;
 
-import xerxes.storage.TaskStorage;
-import xerxes.task.TaskList;
-import xerxes.task.Task;
-import xerxes.task.ToDo;
-import xerxes.task.Deadline;
-import xerxes.task.Event;
-import xerxes.ui.Ui;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
+import xerxes.storage.TaskStorage;
+import xerxes.task.Deadline;
+import xerxes.task.Event;
+import xerxes.task.Task;
+import xerxes.task.TaskList;
+import xerxes.task.ToDo;
+import xerxes.ui.Ui;
 
 /**
  * Interprets user commands and performs the corresponding task-list operations.
@@ -25,10 +24,10 @@ public class Parser {
                     .withResolverStyle(ResolverStyle.STRICT);;
 
     /** User interface used to display command results and errors. */
-    private Ui ui;
+    private final Ui ui;
 
     /** Storage used when the user requests that tasks be saved. */
-    private TaskStorage taskStorage;
+    private final TaskStorage taskStorage;
 
     /**
      * Creates a parser that reports results through the given UI and saves through the given storage.
@@ -128,7 +127,7 @@ public class Parser {
      * @param taskStorage Storage that will save the tasks.
      * @param tasks Tasks to save.
      */
-    public  void handleSaveTasks(TaskStorage taskStorage, TaskList tasks) {
+    public void handleSaveTasks(TaskStorage taskStorage, TaskList tasks) {
         try {
             taskStorage.save(tasks);
             ui.showMessage("Yr tasks have been saved!");
@@ -264,7 +263,7 @@ public class Parser {
      * @return Parsed date.
      * @throws IllegalArgumentException If the date is invalid or uses the wrong format.
      */
-    public static LocalDate formatDate(String rawDate) throws DateTimeParseException {
+    public static LocalDate formatDate(String rawDate) {
         try {
             return LocalDate.parse(rawDate, INPUT_FORMAT);
         } catch (DateTimeParseException e) {

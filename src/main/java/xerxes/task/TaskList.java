@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class TaskList implements Iterable<Task>{
     /** Tasks in the order they were added or loaded. */
-    private List<Task> tasks;
+    private final List<Task> tasks;
 
     /** Creates an empty task list. */
     public TaskList() {
@@ -82,6 +82,7 @@ public class TaskList implements Iterable<Task>{
     public void addTask(Task task) {
         this.tasks.add(task);
     }
+
     /**
      * Returns all tasks as a numbered, line-separated list.
      *
