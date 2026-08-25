@@ -12,12 +12,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
+import java.time.format.ResolverStyle;
 
 
 public class Parser {
     private static final DateTimeFormatter INPUT_FORMAT =
-            DateTimeFormatter.ofPattern("d/M/uuuu");
+            DateTimeFormatter.ofPattern("d/M/uuuu")
+                    .withResolverStyle(ResolverStyle.STRICT);;
     private Ui ui;
     private TaskStorage taskStorage;
 
