@@ -3,6 +3,7 @@ package xerxes.task;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Manages an ordered collection of tasks.
@@ -81,6 +82,30 @@ public class TaskList implements Iterable<Task>{
      */
     public void addTask(Task task) {
         this.tasks.add(task);
+    }
+
+    /**
+     * Returns tasks whose descriptions contain the given keyword, ignoring case.
+     *
+     * @param keyword keyword to search for.
+     * @return matching tasks in their original list order.
+     */
+    public List<Task> findMatchingTasks(String keyword) {
+        List<Task> matchingTasks = new ArrayList<>();
+
+        if (keyword == null || keyword.isBlank()) {
+            return matchingTasks;
+        }
+
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        for (Task task : tasks) {
+            String normalizedTaskName = task.getTaskName().toLowerCase(Locale.ROOT);
+            if (normalizedTaskName.contains(normalizedKeyword)) {
+                matchingTasks.add(task);
+            }
+        }
+
+        return matchingTasks;
     }
 
     /**

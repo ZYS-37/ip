@@ -1,18 +1,20 @@
 package xerxes.parser;
 
+import xerxes.storage.TaskStorage;
+import xerxes.task.TaskList;
+import xerxes.task.Task;
+import xerxes.task.ToDo;
+import xerxes.task.Deadline;
+import xerxes.task.Event;
+import xerxes.ui.Ui;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.List;
 
-import xerxes.storage.TaskStorage;
-import xerxes.task.Deadline;
-import xerxes.task.Event;
-import xerxes.task.Task;
-import xerxes.task.TaskList;
-import xerxes.task.ToDo;
-import xerxes.ui.Ui;
 
 /**
  * Interprets user commands and performs the corresponding task-list operations.
@@ -63,6 +65,11 @@ public class Parser {
             return true;
         }
 
+        if (input.equals("find") || input.startsWith("find ")) {
+            handleFindTasks(input, tasks);
+            return true;
+        }
+
         if (input.matches("mark \\d+")) {
             handleTaskStatus(input, tasks, true);
             return true;
@@ -95,6 +102,24 @@ public class Parser {
 
         ui.showError("I dont gets, not going to do anth.");
         return true;
+    }
+
+    /**
+     * Searches the task list using the keyword in a find command and displays the results.
+     *
+     * @param input find command entered by the user.
+     * @param tasks task list to search.
+     */
+    private void handleFindTasks(String input, TaskList tasks) {
+        String keyword = input.length() > 4 ? input.substring(5).trim() : "";
+
+        if (keyword.isEmpty()) {
+            ui.showError("Please provide a keyword to search for.");
+            return;
+        }
+
+        List<Task> matchingTasks = tasks.findMatchingTasks(keyword);
+        ui.showMatchingTasks(matchingTasks);
     }
 
     /**
