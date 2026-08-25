@@ -1,3 +1,10 @@
+package xerxes;
+
+import xerxes.parser.Parser;
+import xerxes.storage.TaskStorage;
+import xerxes.task.TaskList;
+import xerxes.ui.Ui;
+
 import java.io.IOException;
 
 public class Xerxes {
