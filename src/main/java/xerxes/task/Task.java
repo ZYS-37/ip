@@ -14,7 +14,7 @@ public class Task {
     /**
      * Creates an incomplete task with the given description.
      *
-     * @param taskName description of the task
+     * @param taskName Description of the task.
      */
     public Task(String taskName) {
         this.taskName = taskName;
@@ -33,7 +33,7 @@ public class Task {
     /**
      * Returns whether this task has been completed.
      *
-     * @return true if the task is completed, otherwise false
+     * @return True if the task is completed, otherwise false.
      */
     public boolean getIsCompleted() {
         return this.isCompleted;
@@ -42,7 +42,7 @@ public class Task {
     /**
      * Returns the task description.
      *
-     * @return description of this task
+     * @return Description of this task.
      */
     public String getTaskName() {
         return this.taskName;
@@ -51,7 +51,7 @@ public class Task {
     /**
      * Returns a display representation containing this task's completion status and description.
      *
-     * @return formatted task description
+     * @return Formatted task description.
      */
     @Override
     public String toString() {

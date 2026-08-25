@@ -28,7 +28,7 @@ public class Ui {
     /**
      * Reads one command entered by the user.
      *
-     * @return the command line entered by the user
+     * @return The command line entered by the user.
      */
     public String readCommand() {
         return scanner.nextLine();
@@ -44,7 +44,7 @@ public class Ui {
     /**
      * Displays a normal message followed by a divider.
      *
-     * @param message message to display
+     * @param message Message to display.
      */
     public void showMessage(String message) {
         System.out.println(message);
@@ -54,7 +54,7 @@ public class Ui {
     /**
      * Displays a message with a divider above it, for startup messages.
      *
-     * @param message message to display
+     * @param message Message to display.
      */
     public void showTopMessage(String message) {
         printDivider();
@@ -64,7 +64,7 @@ public class Ui {
     /**
      * Displays an error that occurs before the main interaction loop starts.
      *
-     * @param message error message to display
+     * @param message Error message to display.
      */
     public void showTopError(String message) {
         showTopMessage(message);
@@ -73,7 +73,7 @@ public class Ui {
     /**
      * Displays an error message followed by a divider.
      *
-     * @param message error message to display
+     * @param message Error message to display.
      */
     public void showError(String message) {
         showMessage(message);

@@ -28,9 +28,9 @@ public class TaskStorage {
     /**
      * Creates storage backed by the specified save file.
      *
-     * @param savefilePath path of the save file
+     * @param savefilePath Path of the save file.
      */
-    public TaskStorage (String savefilePath) {
+    public TaskStorage(String savefilePath) {
         this.savefilePath = savefilePath;
     }
 
@@ -38,8 +38,8 @@ public class TaskStorage {
     /**
      * Writes every task in the given list to the save file.
      *
-     * @param tasks tasks to persist
-     * @throws IOException if the save file cannot be written
+     * @param tasks Tasks to persist.
+     * @throws IOException If the save file cannot be written.
      */
     public void save(TaskList tasks) throws IOException{
         File saveFile = new File(this.savefilePath);
@@ -55,9 +55,9 @@ public class TaskStorage {
     /**
      * Creates the save file when necessary and loads each stored task from it.
      *
-     * @return tasks decoded from the save file
-     * @throws IOException if the save file cannot be created or read
-     * @throws IllegalArgumentException if a saved task is malformed
+     * @return Tasks decoded from the save file.
+     * @throws IOException If the save file cannot be created or read.
+     * @throws IllegalArgumentException If a saved task is malformed.
      */
     public List<Task> load() throws IOException {
         Path filePath = Path.of(this.savefilePath);
@@ -99,8 +99,8 @@ public class TaskStorage {
     /**
      * Escapes characters that have a special meaning in the save-file format.
      *
-     * @param field unescaped field value
-     * @return escaped field value
+     * @param field Unescaped field value.
+     * @return Escaped field value.
      */
     private String encodeField(String field) {
         return field.replace("\\", "\\\\")
@@ -110,9 +110,9 @@ public class TaskStorage {
     /**
      * Converts a task into a single line in the save-file format.
      *
-     * @param task task to encode
-     * @return encoded task line
-     * @throws IllegalArgumentException if the task type is unsupported
+     * @param task Task to encode.
+     * @return Encoded task line.
+     * @throws IllegalArgumentException If the task type is unsupported.
      */
     private String encode(Task task) {
         String status = task.getIsCompleted() ? "1" : "0";
@@ -148,9 +148,9 @@ public class TaskStorage {
     /**
      * Reconstructs a task from one encoded save-file line.
      *
-     * @param line encoded task line
-     * @return decoded task
-     * @throws IllegalArgumentException if the line has an invalid format
+     * @param line Encoded task line.
+     * @return Decoded task.
+     * @throws IllegalArgumentException If the line has an invalid format.
      */
     private Task decode(String line) {
         List<String> fields = splitEscape(line);
@@ -196,9 +196,9 @@ public class TaskStorage {
     /**
      * Verifies that an encoded task has exactly the expected number of fields.
      *
-     * @param fields decoded fields from the save-file line
-     * @param expected required number of fields
-     * @throws IllegalArgumentException if the field count differs from {@code expected}
+     * @param fields Decoded fields from the save-file line.
+     * @param expected Required number of fields.
+     * @throws IllegalArgumentException If the field count differs from {@code expected}.
      */
     private void requireFieldCount(List<String> fields, int expected) {
         if (fields.size() != expected) {
@@ -209,9 +209,9 @@ public class TaskStorage {
     /**
      * Splits an encoded save-file line at unescaped separators and unescapes its fields.
      *
-     * @param line encoded task line
-     * @return decoded fields in their original order
-     * @throws IllegalArgumentException if the line contains an invalid escape sequence
+     * @param line Encoded task line.
+     * @return Decoded fields in their original order.
+     * @throws IllegalArgumentException If the line contains an invalid escape sequence.
      */
     public List<String> splitEscape(String line) {
         List<String> fields = new ArrayList<>();
@@ -249,10 +249,10 @@ public class TaskStorage {
     /**
      * Parses a date stored using the ISO local-date format.
      *
-     * @param value encoded date value
-     * @param fieldName descriptive name used in any error message
-     * @return parsed date
-     * @throws IllegalArgumentException if the value is not a valid ISO local date
+     * @param value Encoded date value.
+     * @param fieldName Descriptive name used in any error message.
+     * @return Parsed date.
+     * @throws IllegalArgumentException If the value is not a valid ISO local date.
      */
     private LocalDate parseSavedDate(String value, String fieldName) {
         try{

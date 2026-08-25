@@ -19,7 +19,7 @@ public class TaskList implements Iterable<Task>{
     /**
      * Creates a task list containing a copy of the supplied tasks.
      *
-     * @param tasks tasks to add to this list
+     * @param tasks Tasks to add to this list.
      */
     public TaskList(List<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
@@ -29,10 +29,10 @@ public class TaskList implements Iterable<Task>{
     /**
      * Changes the completion status of the task at the given zero-based index.
      *
-     * @param taskIndex zero-based index of the task to update
-     * @param isCompleted new completion status
-     * @return the updated task
-     * @throws IllegalArgumentException if {@code taskIndex} is outside this list
+     * @param taskIndex Zero-based index of the task to update.
+     * @param isCompleted New completion status.
+     * @return The updated task.
+     * @throws IllegalArgumentException If {@code taskIndex} is outside this list.
      */
     public Task handleCompletionStatus(int taskIndex, boolean isCompleted) {
         validateIndex(taskIndex);
@@ -50,9 +50,9 @@ public class TaskList implements Iterable<Task>{
     /**
      * Removes and returns the task at the given zero-based index.
      *
-     * @param taskIndex zero-based index of the task to remove
-     * @return the removed task
-     * @throws IllegalArgumentException if {@code taskIndex} is outside this list
+     * @param taskIndex Zero-based index of the task to remove.
+     * @return The removed task.
+     * @throws IllegalArgumentException If {@code taskIndex} is outside this list.
      */
     public Task deleteTask(int taskIndex) {
         validateIndex(taskIndex);
@@ -64,8 +64,8 @@ public class TaskList implements Iterable<Task>{
     /**
      * Validates that an index identifies a task in this list.
      *
-     * @param index zero-based index to validate
-     * @throws IllegalArgumentException if the index is outside this list
+     * @param index Zero-based index to validate.
+     * @throws IllegalArgumentException If the index is outside this list.
      */
     public void validateIndex(int index) {
         if (index < 0 || index >= tasks.size()) {
@@ -77,7 +77,7 @@ public class TaskList implements Iterable<Task>{
     /**
      * Appends a task to this list.
      *
-     * @param task task to add
+     * @param task Task to add.
      */
     public void addTask(Task task) {
         this.tasks.add(task);
@@ -85,7 +85,7 @@ public class TaskList implements Iterable<Task>{
     /**
      * Returns all tasks as a numbered, line-separated list.
      *
-     * @return formatted representation of this task list
+     * @return Formatted representation of this task list.
      */
     @Override
     public String toString() {
@@ -104,7 +104,7 @@ public class TaskList implements Iterable<Task>{
     /**
      * Returns an iterator over the tasks in list order.
      *
-     * @return iterator over the contained tasks
+     * @return Iterator over the contained tasks.
      */
     @Override
     public Iterator<Task> iterator() {

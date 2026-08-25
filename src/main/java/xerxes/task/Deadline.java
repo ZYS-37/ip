@@ -16,8 +16,8 @@ public class Deadline extends Task {
     /**
      * Creates an incomplete deadline task.
      *
-     * @param taskName description of the task
-     * @param deadline date by which the task should be completed
+     * @param taskName Description of the task.
+     * @param deadline Date by which the task should be completed.
      */
     public Deadline(String taskName, LocalDate deadline) {
         super(taskName);
@@ -27,7 +27,7 @@ public class Deadline extends Task {
     /**
      * Returns the deadline date.
      *
-     * @return deadline date for this task
+     * @return Deadline date for this task.
      */
     public LocalDate getDeadline() {
         return this.deadline;
@@ -36,7 +36,7 @@ public class Deadline extends Task {
     /**
      * Returns a display representation including this task's deadline.
      *
-     * @return formatted deadline task description
+     * @return Formatted deadline task description.
      */
     @Override
     public String toString() {

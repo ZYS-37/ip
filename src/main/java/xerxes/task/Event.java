@@ -19,9 +19,9 @@ public class Event extends Task {
     /**
      * Creates an incomplete event task.
      *
-     * @param taskName description of the event
-     * @param startTime date on which the event starts
-     * @param endTime date on which the event ends
+     * @param taskName Description of the event.
+     * @param startTime Date on which the event starts.
+     * @param endTime Date on which the event ends.
      */
     public Event(String taskName, LocalDate startTime, LocalDate endTime) {
         super(taskName);
@@ -32,7 +32,7 @@ public class Event extends Task {
     /**
      * Returns the event start date.
      *
-     * @return start date of the event
+     * @return Start date of the event.
      */
     public LocalDate getStartTime() {
         return this.startTime;
@@ -41,7 +41,7 @@ public class Event extends Task {
     /**
      * Returns the event end date.
      *
-     * @return end date of the event
+     * @return End date of the event.
      */
     public LocalDate getEndTime() {
         return this.endTime;
@@ -50,7 +50,7 @@ public class Event extends Task {
     /**
      * Returns a display representation including this event's duration.
      *
-     * @return formatted event task description
+     * @return Formatted event task description.
      */
     @Override
     public String toString() {

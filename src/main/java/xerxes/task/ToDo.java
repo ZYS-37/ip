@@ -7,7 +7,7 @@ public class ToDo extends Task {
     /**
      * Creates an incomplete to-do task with the given description.
      *
-     * @param taskName description of the to-do task
+     * @param taskName Description of the to-do task.
      */
     public ToDo(String taskName) {
         super(taskName);
@@ -16,7 +16,7 @@ public class ToDo extends Task {
     /**
      * Returns a display representation prefixed with the to-do task type.
      *
-     * @return formatted to-do task description
+     * @return Formatted to-do task description.
      */
     @Override
     public String toString() {

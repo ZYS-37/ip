@@ -32,7 +32,7 @@ public class Xerxes {
      * If the file cannot be read or contains malformed task data, the application
      * starts with an empty task list instead.
      *
-     * @param filePath path of the task save file
+     * @param filePath Path of the task save file.
      */
     public Xerxes(String filePath) {
         this.ui = new Ui();
@@ -67,7 +67,7 @@ public class Xerxes {
     /**
      * Starts the Xerxes application using the default save-file location.
      *
-     * @param args command-line arguments, which are not currently used
+     * @param args Command-line arguments, which are not currently used.
      */
     public static void main(String[] args) {
         new Xerxes(SAVE_FILE_PATH).run();
