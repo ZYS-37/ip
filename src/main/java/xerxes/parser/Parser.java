@@ -1,13 +1,5 @@
 package xerxes.parser;
 
-import xerxes.storage.TaskStorage;
-import xerxes.task.TaskList;
-import xerxes.task.Task;
-import xerxes.task.ToDo;
-import xerxes.task.Deadline;
-import xerxes.task.Event;
-import xerxes.ui.Ui;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +7,13 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.List;
 
+import xerxes.storage.TaskStorage;
+import xerxes.task.TaskList;
+import xerxes.task.Task;
+import xerxes.task.ToDo;
+import xerxes.task.Deadline;
+import xerxes.task.Event;
+import xerxes.ui.Ui;
 
 /**
  * Interprets user commands and performs the corresponding task-list operations.

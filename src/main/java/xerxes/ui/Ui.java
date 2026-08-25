@@ -1,9 +1,9 @@
 package xerxes.ui;
 
-import xerxes.task.Task;
-
 import java.util.Scanner;
 import java.util.List;
+
+import xerxes.task.Task;
 
 /**
  * Handles all console input and output for the Xerxes application.
