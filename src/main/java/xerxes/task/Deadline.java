@@ -7,11 +7,11 @@ import java.time.format.DateTimeFormatter;
  * Represents a task that must be completed by a particular date.
  */
 public class Deadline extends Task {
-    /** Date by which this task should be completed. */
-    private final LocalDate deadline;
-
     /** Format used when displaying the deadline to the user. */
     private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+
+    /** Date by which this task should be completed. */
+    private final LocalDate deadline;
 
     /**
      * Creates an incomplete deadline task.

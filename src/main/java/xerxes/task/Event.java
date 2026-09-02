@@ -7,14 +7,14 @@ import java.time.format.DateTimeFormatter;
  * Represents a task scheduled over a start and end date.
  */
 public class Event extends Task {
+    /** Format used when displaying event dates to the user. */
+    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+
     /** Date on which this event begins. */
     private final LocalDate startTime;
 
     /** Date on which this event ends. */
     private final LocalDate endTime;
-
-    /** Format used when displaying event dates to the user. */
-    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
     /**
      * Creates an incomplete event task.

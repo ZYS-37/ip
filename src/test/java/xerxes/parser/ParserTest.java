@@ -34,8 +34,7 @@ class ParserTest {
     @Test
     void formatDate_wrongFormat_throwsException() {
         assertThrows(
-                IllegalArgumentException.class,
-                () -> Parser.formatDate("2026-03-02")
+                IllegalArgumentException.class, () -> Parser.formatDate("2026-03-02")
         );
     }
 
@@ -43,8 +42,7 @@ class ParserTest {
     @Test
     void formatDate_invalidCalendarDate_throwsException() {
         assertThrows(
-                IllegalArgumentException.class,
-                () -> Parser.formatDate("31/2/2026")
+                IllegalArgumentException.class, () -> Parser.formatDate("31/2/2026")
         );
     }
 
@@ -52,8 +50,7 @@ class ParserTest {
     @Test
     void formatDate_emptyInput_throwsException() {
         assertThrows(
-                IllegalArgumentException.class,
-                () -> Parser.formatDate("")
+                IllegalArgumentException.class, () -> Parser.formatDate("")
         );
     }
 }

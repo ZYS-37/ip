@@ -8,7 +8,7 @@ import java.util.Locale;
 /**
  * Manages an ordered collection of tasks.
  */
-public class TaskList implements Iterable<Task>{
+public class TaskList implements Iterable<Task> {
     /** Tasks in the order they were added or loaded. */
     private final List<Task> tasks;
 
