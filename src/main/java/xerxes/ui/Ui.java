@@ -1,7 +1,7 @@
 package xerxes.ui;
 
-import java.util.Scanner;
 import java.util.List;
+import java.util.Scanner;
 
 import xerxes.task.Task;
 
@@ -14,7 +14,7 @@ public class Ui {
             "____________________________________________________________";
 
     /** ASCII-art banner displayed when the application starts. */
-    public static final String BANNER = "__  __                        \n"
+    private static final String BANNER = "__  __                        \n"
             + "\\ \\/ /  ___   _ __ __  __  ___  ___ \n"
             + " \\  /  / _ \\| '__|\\ \\/ / / _ \\/ __|\n"
             + " /  \\ |  __/| |    >  < |  __/\\__ \\\n"
