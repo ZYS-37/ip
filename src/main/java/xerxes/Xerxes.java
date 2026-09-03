@@ -31,8 +31,6 @@ public class Xerxes {
      * Creates an application instance and loads tasks from the specified file.
      * If the file cannot be read or contains malformed task data, the application
      * starts with an empty task list instead.
-     *
-     * @param filePath Path of the task save file.
      */
     public Xerxes() {
         this.ui = new Ui();
