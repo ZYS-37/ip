@@ -2,6 +2,7 @@ package xerxes;
 
 import java.io.IOException;
 
+import xerxes.parser.CommandResult;
 import xerxes.parser.Parser;
 import xerxes.storage.TaskStorage;
 import xerxes.task.TaskList;
@@ -31,12 +32,10 @@ public class Xerxes {
      * Creates an application instance and loads tasks from the specified file.
      * If the file cannot be read or contains malformed task data, the application
      * starts with an empty task list instead.
-     *
-     * @param filePath Path of the task save file.
      */
-    public Xerxes(String filePath) {
+    public Xerxes() {
         this.ui = new Ui();
-        this.taskStorage = new TaskStorage(filePath);
+        this.taskStorage = new TaskStorage(SAVE_FILE_PATH);
         TaskList loadedTasks;
 
         try {
@@ -50,7 +49,7 @@ public class Xerxes {
             loadedTasks = new TaskList();
         }
         this.tasks = loadedTasks;
-        this.parser = new Parser(ui, taskStorage);
+        this.parser = new Parser(taskStorage);
     }
 
     /**
@@ -61,9 +60,25 @@ public class Xerxes {
         boolean isActive = true;
         while (isActive) {
             String input = ui.readCommand();
-            isActive = parser.handleCommand(input, tasks);
+            CommandResult result = executeCommand(input);
+            if (result.isError()) {
+                ui.showError(result.getMessage());
+            } else {
+                ui.showMessage(result.getMessage());
+            }
+            isActive = !result.shouldExit();
         }
         ui.close();
+    }
+
+    /**
+     * Processes one command using the application's task list and storage.
+     *
+     * @param input Command entered by the user.
+     * @return Result containing the command response and status.
+     */
+    public CommandResult executeCommand(String input) {
+        return parser.handleCommand(input, tasks);
     }
 
     /**
@@ -72,6 +87,6 @@ public class Xerxes {
      * @param args Command-line arguments, which are not currently used.
      */
     public static void main(String[] args) {
-        new Xerxes(SAVE_FILE_PATH).run();
+        new Xerxes().run();
     }
 }
