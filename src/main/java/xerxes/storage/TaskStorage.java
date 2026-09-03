@@ -28,7 +28,7 @@ public class TaskStorage {
     /**
      * Creates storage backed by the specified save file.
      *
-     * @param savefilePath Path of the save file.
+     * @param saveFilePath Path of the save file.
      */
     public TaskStorage(String saveFilePath) {
         this.saveFilePath = saveFilePath;

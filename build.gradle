@@ -53,7 +53,7 @@ test {
 }
 
 application {
-    mainClass = 'xerxes.Xerxes'
+    mainClass = 'xerxes.Launcher'
 }
 
 checkstyle {
