@@ -34,9 +34,9 @@ public class Xerxes {
      *
      * @param filePath Path of the task save file.
      */
-    public Xerxes(String filePath) {
+    public Xerxes() {
         this.ui = new Ui();
-        this.taskStorage = new TaskStorage(filePath);
+        this.taskStorage = new TaskStorage(SAVE_FILE_PATH);
         TaskList loadedTasks;
 
         try {
@@ -72,6 +72,6 @@ public class Xerxes {
      * @param args Command-line arguments, which are not currently used.
      */
     public static void main(String[] args) {
-        new Xerxes(SAVE_FILE_PATH).run();
+        new Xerxes().run();
     }
 }
