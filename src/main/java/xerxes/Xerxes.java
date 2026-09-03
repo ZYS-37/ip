@@ -2,6 +2,7 @@ package xerxes;
 
 import java.io.IOException;
 
+import xerxes.parser.CommandResult;
 import xerxes.parser.Parser;
 import xerxes.storage.TaskStorage;
 import xerxes.task.TaskList;
@@ -48,7 +49,7 @@ public class Xerxes {
             loadedTasks = new TaskList();
         }
         this.tasks = loadedTasks;
-        this.parser = new Parser(ui, taskStorage);
+        this.parser = new Parser(taskStorage);
     }
 
     /**
@@ -59,9 +60,25 @@ public class Xerxes {
         boolean isActive = true;
         while (isActive) {
             String input = ui.readCommand();
-            isActive = parser.handleCommand(input, tasks);
+            CommandResult result = executeCommand(input);
+            if (result.isError()) {
+                ui.showError(result.getMessage());
+            } else {
+                ui.showMessage(result.getMessage());
+            }
+            isActive = !result.shouldExit();
         }
         ui.close();
+    }
+
+    /**
+     * Processes one command using the application's task list and storage.
+     *
+     * @param input Command entered by the user.
+     * @return Result containing the command response and status.
+     */
+    public CommandResult executeCommand(String input) {
+        return parser.handleCommand(input, tasks);
     }
 
     /**

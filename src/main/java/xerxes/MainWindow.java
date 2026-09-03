@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import xerxes.parser.CommandResult;
 /**
  * Controller for the main GUI.
  */
@@ -30,9 +31,9 @@ public class MainWindow extends AnchorPane {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Xerxes instance */
-    public void setXerxes(Xerxes d) {
-        xerxes = d;
+    /** Injects the Xerxes instance. */
+    public void setXerxes(Xerxes xerxes) {
+        this.xerxes = xerxes;
     }
 
     /**
@@ -42,11 +43,20 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = xerxes.getResponse(input);
+        if (input.isBlank()) {
+            return;
+        }
+
+        CommandResult result = xerxes.executeCommand(input.trim());
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, xerxesImage)
+                DialogBox.getDukeDialog(result.getMessage(), xerxesImage)
         );
         userInput.clear();
+
+        if (result.shouldExit()) {
+            userInput.setDisable(true);
+            sendButton.setDisable(true);
+        }
     }
 }
