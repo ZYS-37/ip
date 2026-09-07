@@ -18,6 +18,25 @@ import xerxes.task.ToDo;
  * Interprets user commands and performs the corresponding task-list operations.
  */
 public class Parser {
+    /** Commands that do not require additional arguments. */
+    private static final String BYE_COMMAND = "bye";
+    private static final String LIST_COMMAND = "list";
+    private static final String SAVE_COMMAND = "save";
+    private static final String FIND_COMMAND = "find";
+
+    /** Command prefixes used to identify commands with arguments. */
+    private static final String TODO_COMMAND = "todo ";
+    private static final String DEADLINE_COMMAND = "deadline ";
+    private static final String EVENT_COMMAND = "event ";
+    private static final String DELETE_COMMAND = "delete ";
+    private static final String MARK_COMMAND_PATTERN = "mark \\d+";
+    private static final String UNMARK_COMMAND_PATTERN = "unmark \\d+";
+
+    /** Markers separating task descriptions from their date arguments. */
+    private static final String DEADLINE_MARKER = " /by ";
+    private static final String EVENT_FROM_MARKER = " /from ";
+    private static final String EVENT_TO_MARKER = " /to ";
+
     /** Strict date format accepted for deadline and event commands. */
     private static final DateTimeFormatter INPUT_FORMAT =
             DateTimeFormatter.ofPattern("d/M/uuuu")
@@ -41,34 +60,35 @@ public class Parser {
     public CommandResult handleCommand(String input, TaskList tasks) {
         assert input != null : "The parser expects a command string";
         assert tasks != null : "The parser expects a task list to operate on";
-        if (input.equals("bye")) {
+
+        if (input.equals(BYE_COMMAND)) {
             return success("Ciao, cya again", true);
         }
-        if (input.equals("list")) {
+        if (input.equals(LIST_COMMAND)) {
             return success(tasks.toString());
         }
-        if (input.equals("save")) {
+        if (input.equals(SAVE_COMMAND)) {
             return handleSaveTasks(tasks);
         }
-        if (input.equals("find") || input.startsWith("find ")) {
+        if (input.equals(FIND_COMMAND) || input.startsWith(FIND_COMMAND + " ")) {
             return handleFindTasks(input, tasks);
         }
-        if (input.matches("mark \\d+")) {
+        if (input.matches(MARK_COMMAND_PATTERN)) {
             return handleTaskStatus(input, tasks, true);
         }
-        if (input.matches("unmark \\d+")) {
+        if (input.matches(UNMARK_COMMAND_PATTERN)) {
             return handleTaskStatus(input, tasks, false);
         }
-        if (input.startsWith("todo ")) {
+        if (input.startsWith(TODO_COMMAND)) {
             return handleAddTodo(input, tasks);
         }
-        if (input.startsWith("deadline ")) {
+        if (input.startsWith(DEADLINE_COMMAND)) {
             return handleAddDeadline(input, tasks);
         }
-        if (input.startsWith("event ")) {
+        if (input.startsWith(EVENT_COMMAND)) {
             return handleAddEvent(input, tasks);
         }
-        if (input.matches("delete \\d+")) {
+        if (input.matches(DELETE_COMMAND + "\\d+")) {
             return handleDeleteTask(input, tasks);
         }
         return error("I dont gets, not going to do anth.");
@@ -76,7 +96,7 @@ public class Parser {
 
     /** Handles a find command. */
     private CommandResult handleFindTasks(String input, TaskList tasks) {
-        String keyword = input.length() > 4 ? input.substring(5).trim() : "";
+        String keyword = input.substring(FIND_COMMAND.length()).trim();
         if (keyword.isEmpty()) {
             return error("Please provide a keyword to search for.");
         }
@@ -126,7 +146,7 @@ public class Parser {
 
     /** Handles a todo command. */
     private CommandResult handleAddTodo(String input, TaskList tasks) {
-        String description = input.substring(5).trim();
+        String description = input.substring(TODO_COMMAND.length()).trim();
         if (description.isEmpty()) {
             return error("yoo the task name cannot be empty man.");
         }
@@ -138,9 +158,8 @@ public class Parser {
 
     /** Handles a deadline command. */
     private CommandResult handleAddDeadline(String input, TaskList tasks) {
-        String taskNameAndDeadline = input.substring(9).trim();
-        String byMarker = " /by ";
-        int byIndex = taskNameAndDeadline.indexOf(byMarker);
+        String taskNameAndDeadline = input.substring(DEADLINE_COMMAND.length()).trim();
+        int byIndex = taskNameAndDeadline.indexOf(DEADLINE_MARKER);
         if (byIndex < 0) {
             return error("yoo yr format cmi must use : deadline <description> /by <time>");
         }
@@ -152,7 +171,7 @@ public class Parser {
 
         try {
             LocalDate deadline = formatDate(taskNameAndDeadline
-                    .substring(byIndex + byMarker.length()).trim());
+                    .substring(byIndex + DEADLINE_MARKER.length()).trim());
             Deadline task = new Deadline(taskName, deadline);
             tasks.addTask(task);
             return success("Gotcha boss, the task: " + task + " has been added!");
@@ -163,12 +182,11 @@ public class Parser {
 
     /** Handles an event command. */
     private CommandResult handleAddEvent(String input, TaskList tasks) {
-        String eventAndDuration = input.substring(6).trim();
-        String fromMarker = " /from ";
-        String toMarker = " /to ";
-        int fromIndex = eventAndDuration.indexOf(fromMarker);
-        int toIndex = eventAndDuration.indexOf(toMarker, fromIndex + fromMarker.length());
-        if (fromIndex < 0 || toIndex < 0 || toIndex <= fromIndex + fromMarker.length()) {
+        String eventAndDuration = input.substring(EVENT_COMMAND.length()).trim();
+        int fromIndex = eventAndDuration.indexOf(EVENT_FROM_MARKER);
+        int toIndex = eventAndDuration.indexOf(EVENT_TO_MARKER,
+                fromIndex + EVENT_FROM_MARKER.length());
+        if (fromIndex < 0 || toIndex < 0 || toIndex <= fromIndex + EVENT_FROM_MARKER.length()) {
             return error("The format must be: event <description> /from <start> /to <end>");
         }
 
@@ -179,9 +197,9 @@ public class Parser {
 
         try {
             LocalDate startTime = formatDate(eventAndDuration
-                    .substring(fromIndex + fromMarker.length(), toIndex).trim());
+                    .substring(fromIndex + EVENT_FROM_MARKER.length(), toIndex).trim());
             LocalDate endTime = formatDate(eventAndDuration
-                    .substring(toIndex + toMarker.length()).trim());
+                    .substring(toIndex + EVENT_TO_MARKER.length()).trim());
             Event task = new Event(taskName, startTime, endTime);
             tasks.addTask(task);
             return success("Gotcha boss, the task: " + task + " has been added!");
@@ -193,7 +211,7 @@ public class Parser {
     /** Handles a delete command. */
     private CommandResult handleDeleteTask(String input, TaskList tasks) {
         try {
-            int index = Integer.parseInt(input.substring(7).trim()) - 1;
+            int index = Integer.parseInt(input.substring(DELETE_COMMAND.length()).trim()) - 1;
             Task task = tasks.deleteTask(index);
             return success("Task removed: " + task);
         } catch (IllegalArgumentException e) {

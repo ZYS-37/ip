@@ -43,13 +43,12 @@ public class TaskStorage {
      */
     public void save(TaskList tasks) throws IOException {
         File saveFile = new File(this.saveFilePath);
-        BufferedWriter saveFileWriter = new BufferedWriter(new FileWriter(saveFile));
-        for (Task task : tasks) {
-            saveFileWriter.write(encode(task));
-            saveFileWriter.newLine();
+        try (BufferedWriter saveFileWriter = new BufferedWriter(new FileWriter(saveFile))) {
+            for (Task task : tasks) {
+                saveFileWriter.write(encode(task));
+                saveFileWriter.newLine();
+            }
         }
-        saveFileWriter.close();
-
     }
 
     /**
@@ -70,7 +69,7 @@ public class TaskStorage {
                 Files.createFile(filePath);
             }
         } catch (IOException e) {
-            System.err.println("Error has occurred" + e.getMessage());
+            throw new IOException("Unable to prepare save file: " + filePath, e);
         }
         List<Task> tasks = new ArrayList<>();
         try {
