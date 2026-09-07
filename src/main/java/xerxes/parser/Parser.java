@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import xerxes.storage.TaskStorage;
 import xerxes.task.Deadline;
@@ -32,6 +34,19 @@ public class Parser {
     private static final String MARK_COMMAND_PATTERN = "mark \\d+";
     private static final String UNMARK_COMMAND_PATTERN = "unmark \\d+";
 
+    /** Command aliases. */
+    private static final Map<String, String> COMMAND_ALIASES = Map.of(
+            "b", "bye",
+            "l", "list",
+            "s", "save",
+            "f", "find",
+            "t", "todo",
+            "d", "deadline",
+            "e", "event",
+            "del", "delete",
+            "m", "mark",
+            "um", "unmark"
+    );
     /** Markers separating task descriptions from their date arguments. */
     private static final String DEADLINE_MARKER = " /by ";
     private static final String EVENT_FROM_MARKER = " /from ";
@@ -60,6 +75,8 @@ public class Parser {
     public CommandResult handleCommand(String input, TaskList tasks) {
         assert input != null : "The parser expects a command string";
         assert tasks != null : "The parser expects a task list to operate on";
+
+        input = normaliseInput(input);
 
         if (input.equals(BYE_COMMAND)) {
             return success("Ciao, cya again", true);
@@ -92,6 +109,34 @@ public class Parser {
             return handleDeleteTask(input, tasks);
         }
         return error("I dont gets, not going to do anth.");
+    }
+
+    /**
+     * Normalises Inputs by replacing aliases with long form
+     *
+     * @param input Command entered by the user.
+     * @result Command that has been normalised, where short form has been processed.
+     */
+    private String normaliseInput(String input) {
+        assert input != null : "Input command must not be null.";
+
+        String trimmedInput = input.trim();
+        if (trimmedInput.isEmpty()) {
+            return trimmedInput;
+        }
+
+        String[] parts = trimmedInput.split("\\s+", 2);
+        String command = parts[0].toLowerCase(Locale.ROOT);
+        String fullCommand = COMMAND_ALIASES.get(command);
+        if (fullCommand == null) {
+            return trimmedInput;
+        }
+
+        if (parts.length == 1) {
+            return fullCommand;
+        }
+
+        return fullCommand + " " + parts[1];
     }
 
     /** Handles a find command. */
