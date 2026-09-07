@@ -29,6 +29,8 @@ public class Parser {
     private static final String DEADLINE_COMMAND = "deadline ";
     private static final String EVENT_COMMAND = "event ";
     private static final String DELETE_COMMAND = "delete ";
+    private static final String MARK_COMMAND_PATTERN = "mark \\d+";
+    private static final String UNMARK_COMMAND_PATTERN = "unmark \\d+";
 
     /** Markers separating task descriptions from their date arguments. */
     private static final String DEADLINE_MARKER = " /by ";
@@ -71,10 +73,10 @@ public class Parser {
         if (input.equals(FIND_COMMAND) || input.startsWith(FIND_COMMAND + " ")) {
             return handleFindTasks(input, tasks);
         }
-        if (input.matches("mark \\d+")) {
+        if (input.matches(MARK_COMMAND_PATTERN)) {
             return handleTaskStatus(input, tasks, true);
         }
-        if (input.matches("unmark \\d+")) {
+        if (input.matches(UNMARK_COMMAND_PATTERN)) {
             return handleTaskStatus(input, tasks, false);
         }
         if (input.startsWith(TODO_COMMAND)) {
