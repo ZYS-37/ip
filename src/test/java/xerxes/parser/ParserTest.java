@@ -1,17 +1,33 @@
 package xerxes.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
+import xerxes.storage.TaskStorage;
+import xerxes.task.TaskList;
+
 /**
  * Tests date parsing performed by {@link Parser}.
  */
 
 class ParserTest {
+    /** Verifies that the short to-do alias preserves the complete task description. */
+    @Test
+    void handleCommand_todoAlias_addsCompleteDescription() {
+        Parser parser = new Parser(new TaskStorage("unused-test-path"));
+        TaskList tasks = new TaskList();
+
+        CommandResult result = parser.handleCommand("t hehee", tasks);
+
+        assertFalse(result.isError());
+        assertEquals("1: [ ] hehee", tasks.toString());
+    }
+
     /** Verifies that a correctly formatted date is converted to the expected value. */
     @Test
     void formatDate_validDate_returnsParsedDate() {
