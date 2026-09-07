@@ -21,6 +21,7 @@ public class Deadline extends Task {
      */
     public Deadline(String taskName, LocalDate deadline) {
         super(taskName);
+        assert deadline != null : "A deadline task must have a deadline date";
         this.deadline = deadline;
     }
 

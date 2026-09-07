@@ -34,6 +34,8 @@ public class DialogBox extends HBox {
             e.printStackTrace();
         }
 
+        assert dialog != null : "DialogBox.fxml must define the dialog label";
+        assert displayPicture != null : "DialogBox.fxml must define the display picture";
         dialog.setText(text);
         displayPicture.setImage(img);
     }
