@@ -25,7 +25,7 @@ public class Main extends Application {
             fxmlLoader.<MainWindow>getController().setXerxes(xerxes); // inject the Xerxes instance
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Unable to load MainWindow.fxml", e);
         }
     }
 }
