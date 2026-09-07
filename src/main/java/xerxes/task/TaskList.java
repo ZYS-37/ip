@@ -23,7 +23,10 @@ public class TaskList implements Iterable<Task> {
      * @param tasks Tasks to add to this list.
      */
     public TaskList(List<Task> tasks) {
+        assert tasks != null : "A task list must be created from a non-null collection";
         this.tasks = new ArrayList<>(tasks);
+        assert this.tasks.stream().allMatch(task -> task != null)
+                : "A task list cannot contain null tasks";
 
     }
 
@@ -37,6 +40,8 @@ public class TaskList implements Iterable<Task> {
      */
     public Task handleCompletionStatus(int taskIndex, boolean isCompleted) {
         validateIndex(taskIndex);
+        assert taskIndex >= 0 && taskIndex < tasks.size()
+                : "validateIndex must accept a valid task index";
 
         Task task = tasks.get(taskIndex);
 
@@ -57,6 +62,8 @@ public class TaskList implements Iterable<Task> {
      */
     public Task deleteTask(int taskIndex) {
         validateIndex(taskIndex);
+        assert taskIndex >= 0 && taskIndex < tasks.size()
+                : "validateIndex must accept a valid task index";
         Task task = tasks.get(taskIndex);
         tasks.remove(taskIndex);
         return task;
@@ -81,6 +88,7 @@ public class TaskList implements Iterable<Task> {
      * @param task Task to add.
      */
     public void addTask(Task task) {
+        assert task != null : "A task list cannot contain a null task";
         this.tasks.add(task);
     }
 
