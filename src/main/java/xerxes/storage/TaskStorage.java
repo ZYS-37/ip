@@ -31,6 +31,7 @@ public class TaskStorage {
      * @param saveFilePath Path of the save file.
      */
     public TaskStorage(String saveFilePath) {
+        assert saveFilePath != null : "Task storage must have a save-file path";
         this.saveFilePath = saveFilePath;
     }
 

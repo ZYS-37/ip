@@ -56,6 +56,9 @@ public class Parser {
      * @return Result containing the response, error status, and exit status.
      */
     public CommandResult handleCommand(String input, TaskList tasks) {
+        assert input != null : "The parser expects a command string";
+        assert tasks != null : "The parser expects a task list to operate on";
+
         if (input.equals(BYE_COMMAND)) {
             return success("Ciao, cya again", true);
         }
