@@ -99,21 +99,14 @@ public class TaskList implements Iterable<Task> {
      * @return matching tasks in their original list order.
      */
     public List<Task> findMatchingTasks(String keyword) {
-        List<Task> matchingTasks = new ArrayList<>();
-
         if (keyword == null || keyword.isBlank()) {
-            return matchingTasks;
+            return List.of();
         }
 
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
-        for (Task task : tasks) {
-            String normalizedTaskName = task.getTaskName().toLowerCase(Locale.ROOT);
-            if (normalizedTaskName.contains(normalizedKeyword)) {
-                matchingTasks.add(task);
-            }
-        }
-
-        return matchingTasks;
+        return tasks.stream()
+                .filter(task -> task.getTaskName().toLowerCase(Locale.ROOT).contains(normalizedKeyword))
+                .toList();
     }
 
     /**
