@@ -159,7 +159,10 @@ public class Parser {
         String command = parts[0].toLowerCase(Locale.ROOT);
         String fullCommand = COMMAND_ALIASES.get(command);
         if (fullCommand == null) {
-            return trimmedInput;
+            if (parts.length == 1) {
+                return command;
+            }
+            return command + " " + parts[1];
         }
 
         if (parts.length == 1) {
