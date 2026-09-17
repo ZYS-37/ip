@@ -221,6 +221,10 @@ public class Parser {
         if (byIndex < 0) {
             return error("Yoo yr format cmi must use : deadline <description> /by <time>");
         }
+        if (taskNameAndDeadline.indexOf(DEADLINE_MARKER,
+                byIndex + DEADLINE_MARKER.length()) >= 0) {
+            return error("Eh, a deadline can only have one /by parameter ah.");
+        }
 
         String taskName = taskNameAndDeadline.substring(0, byIndex).trim();
         if (taskName.isEmpty()) {
@@ -246,6 +250,13 @@ public class Parser {
                 fromIndex + EVENT_FROM_MARKER.length());
         if (fromIndex < 0 || toIndex < 0 || toIndex <= fromIndex + EVENT_FROM_MARKER.length()) {
             return error("Yo this format cannot ah, it must be: event <description> /from <start> /to <end>");
+        }
+        boolean hasMultipleFromMarkers = eventAndDuration.indexOf(EVENT_FROM_MARKER,
+                fromIndex + EVENT_FROM_MARKER.length()) >= 0;
+        boolean hasMultipleToMarkers = eventAndDuration.indexOf(EVENT_TO_MARKER,
+                toIndex + EVENT_TO_MARKER.length()) >= 0;
+        if (hasMultipleFromMarkers || hasMultipleToMarkers) {
+            return error("Eh, an event can only have one /from and one /to parameter ah.");
         }
 
         String taskName = eventAndDuration.substring(0, fromIndex).trim();
