@@ -31,8 +31,11 @@ public class Parser {
     private static final String DEADLINE_COMMAND = "deadline ";
     private static final String EVENT_COMMAND = "event ";
     private static final String DELETE_COMMAND = "delete ";
+    private static final String DELETE_COMMAND_NAME = "delete";
     private static final String MARK_COMMAND = "mark ";
+    private static final String MARK_COMMAND_NAME = "mark";
     private static final String UNMARK_COMMAND = "unmark ";
+    private static final String UNMARK_COMMAND_NAME = "unmark";
     private static final String MARK_COMMAND_PATTERN = "mark \\d+";
     private static final String UNMARK_COMMAND_PATTERN = "unmark \\d+";
 
@@ -97,6 +100,10 @@ public class Parser {
         }
         if (input.matches(UNMARK_COMMAND_PATTERN)) {
             return handleTaskStatus(input, tasks, false);
+        }
+        if (input.equals(MARK_COMMAND_NAME) || input.equals(UNMARK_COMMAND_NAME)
+                || input.equals(DELETE_COMMAND_NAME)) {
+            return error("Eh, you need to provide a task number ah.");
         }
         if (input.startsWith(MARK_COMMAND) || input.startsWith(UNMARK_COMMAND)
                 || input.startsWith(DELETE_COMMAND)) {
