@@ -32,7 +32,7 @@ public class MainWindow extends AnchorPane {
 
         String introduction = "Yo wassup! I'm Xerxes.\nWhat do ya need?";
         dialogContainer.getChildren().add(
-                DialogBox.getDukeDialog(introduction, xerxesImage)
+                DialogBox.getXerxesDialog(introduction, xerxesImage)
         );
     }
 
@@ -42,7 +42,7 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
+     * Creates two dialog boxes, one echoing user input and the other containing Xerxes's reply and then appends them to
      * the dialog container. Clears the user input after processing.
      */
     @FXML
@@ -55,7 +55,7 @@ public class MainWindow extends AnchorPane {
         CommandResult result = xerxes.executeCommand(input.trim());
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(result.getMessage(), xerxesImage)
+                DialogBox.getXerxesDialog(result.getMessage(), xerxesImage)
         );
         userInput.clear();
 
