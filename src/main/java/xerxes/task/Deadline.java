@@ -2,6 +2,7 @@ package xerxes.task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * Represents a task that must be completed by a particular date.
@@ -32,6 +33,32 @@ public class Deadline extends Task {
      */
     public LocalDate getDeadline() {
         return this.deadline;
+    }
+
+    /**
+     * Checks whether another deadline has the same description and deadline date.
+     *
+     * @param other Object to compare with this deadline.
+     * @return True if both objects represent equivalent deadlines.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (!super.equals(other)) {
+            return false;
+        }
+
+        Deadline deadlineTask = (Deadline) other;
+        return deadline.equals(deadlineTask.deadline);
+    }
+
+    /**
+     * Returns a hash code based on the deadline's task details.
+     *
+     * @return Hash code for this deadline.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), deadline);
     }
 
     /**

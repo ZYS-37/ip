@@ -230,7 +230,11 @@ public class Parser {
         }
 
         Task task = new ToDo(description);
-        tasks.addTask(task);
+        try {
+            tasks.addTask(task);
+        } catch (IllegalArgumentException e) {
+            return error(e.getMessage());
+        }
         return success("Gotcha boss, the task: " + task + " has been added!");
     }
 

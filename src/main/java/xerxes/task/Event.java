@@ -2,6 +2,7 @@ package xerxes.task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * Represents a task scheduled over a start and end date.
@@ -50,6 +51,32 @@ public class Event extends Task {
      */
     public LocalDate getEndTime() {
         return this.endTime;
+    }
+
+    /**
+     * Checks whether another event has the same description and date range.
+     *
+     * @param other Object to compare with this event.
+     * @return True if both objects represent equivalent events.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (!super.equals(other)) {
+            return false;
+        }
+
+        Event event = (Event) other;
+        return startTime.equals(event.startTime) && endTime.equals(event.endTime);
+    }
+
+    /**
+     * Returns a hash code based on the event's task details.
+     *
+     * @return Hash code for this event.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), startTime, endTime);
     }
 
     /**
