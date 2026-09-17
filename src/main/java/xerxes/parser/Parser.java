@@ -28,8 +28,11 @@ public class Parser {
 
     /** Command prefixes used to identify commands with arguments. */
     private static final String TODO_COMMAND = "todo ";
+    private static final String TODO_COMMAND_NAME = "todo";
     private static final String DEADLINE_COMMAND = "deadline ";
+    private static final String DEADLINE_COMMAND_NAME = "deadline";
     private static final String EVENT_COMMAND = "event ";
+    private static final String EVENT_COMMAND_NAME = "event";
     private static final String DELETE_COMMAND = "delete ";
     private static final String DELETE_COMMAND_NAME = "delete";
     private static final String MARK_COMMAND = "mark ";
@@ -107,6 +110,15 @@ public class Parser {
         if (input.equals(MARK_COMMAND_NAME) || input.equals(UNMARK_COMMAND_NAME)
                 || input.equals(DELETE_COMMAND_NAME)) {
             return error("Eh, you need to provide a task number ah.");
+        }
+        if (input.equals(TODO_COMMAND_NAME)) {
+            return error("Yoo the task name cannot be empty man.");
+        }
+        if (input.equals(DEADLINE_COMMAND_NAME)) {
+            return error("Yoo yr format cmi must use : deadline <description> /by <time>");
+        }
+        if (input.equals(EVENT_COMMAND_NAME)) {
+            return error("Yo this format cannot ah, it must be: event <description> /from <start> /to <end>");
         }
         if (input.startsWith(MARK_COMMAND) || input.startsWith(UNMARK_COMMAND)
                 || input.startsWith(DELETE_COMMAND)) {
