@@ -32,7 +32,7 @@ public class MainWindow extends AnchorPane {
 
         String introduction = "Yo wassup! I'm Xerxes.\nWhat do ya need?";
         dialogContainer.getChildren().add(
-                DialogBox.getXerxesDialog(introduction, xerxesImage)
+                DialogBox.getXerxesDialog(introduction, xerxesImage, false)
         );
     }
 
@@ -55,7 +55,7 @@ public class MainWindow extends AnchorPane {
         CommandResult result = xerxes.executeCommand(input.trim());
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getXerxesDialog(result.getMessage(), xerxesImage)
+                DialogBox.getXerxesDialog(result.getMessage(), xerxesImage, result.isError())
         );
         userInput.clear();
 

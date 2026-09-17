@@ -58,9 +58,14 @@ public class DialogBox extends HBox {
         return new DialogBox(text, img);
     }
 
-    public static DialogBox getXerxesDialog(String text, Image img) {
+    public static DialogBox getXerxesDialog(String text, Image img, boolean isError) {
         var db = new DialogBox(text, img);
         db.flip();
+
+        if (isError) {
+            db.dialog.getStyleClass().add("error-label");
+        }
+
         return db;
     }
 }
