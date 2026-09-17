@@ -39,8 +39,8 @@ public class Parser {
     private static final String MARK_COMMAND_NAME = "mark";
     private static final String UNMARK_COMMAND = "unmark ";
     private static final String UNMARK_COMMAND_NAME = "unmark";
-    private static final String MARK_COMMAND_PATTERN = "mark \\d+";
-    private static final String UNMARK_COMMAND_PATTERN = "unmark \\d+";
+    private static final String MARK_COMMAND_PATTERN = "mark -?\\d+";
+    private static final String UNMARK_COMMAND_PATTERN = "unmark -?\\d+";
 
     /** Command aliases. */
     private static final Map<String, String> COMMAND_ALIASES = Map.of(
@@ -109,7 +109,7 @@ public class Parser {
         if (input.matches(UNMARK_COMMAND_PATTERN)) {
             return handleTaskStatus(input, tasks, false);
         }
-        if (input.matches(DELETE_COMMAND + "\\d+")) {
+        if (input.matches(DELETE_COMMAND + "-?\\d+")) {
             return handleDeleteTask(input, tasks);
         }
         if (input.equals(MARK_COMMAND_NAME) || input.equals(UNMARK_COMMAND_NAME)
@@ -197,7 +197,11 @@ public class Parser {
     /** Handles a mark or unmark command. */
     private CommandResult handleTaskStatus(String input, TaskList tasks, boolean isCompleted) {
         try {
-            int taskIndex = Integer.parseInt(input.split(" ")[1]) - 1;
+            int taskNumber = Integer.parseInt(input.split(" ")[1]);
+            if (taskNumber <= 0) {
+                return error("Eh, the task number must be positive ah.");
+            }
+            int taskIndex = taskNumber - 1;
             Task task = tasks.handleCompletionStatus(taskIndex, isCompleted);
             if (isCompleted) {
                 return success("Yippy! " + (taskIndex + 1) + ": " + task
@@ -304,7 +308,11 @@ public class Parser {
     /** Handles a delete command. */
     private CommandResult handleDeleteTask(String input, TaskList tasks) {
         try {
-            int index = Integer.parseInt(input.substring(DELETE_COMMAND.length()).trim()) - 1;
+            int taskNumber = Integer.parseInt(input.substring(DELETE_COMMAND.length()).trim());
+            if (taskNumber <= 0) {
+                return error("Eh, the task number must be positive ah.");
+            }
+            int index = taskNumber - 1;
             Task task = tasks.deleteTask(index);
             return success("Got it ah, I removed your task: " + task);
         } catch (IllegalArgumentException e) {
