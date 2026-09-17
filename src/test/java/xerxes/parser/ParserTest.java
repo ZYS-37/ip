@@ -25,7 +25,7 @@ class ParserTest {
         CommandResult result = parser.handleCommand("t hehee", tasks);
 
         assertFalse(result.isError());
-        assertEquals("1: [ ] hehee", tasks.toString());
+        assertEquals("1: [T][ ] hehee", tasks.toString());
     }
 
     /** Verifies that a correctly formatted date is converted to the expected value. */
