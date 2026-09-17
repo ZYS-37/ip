@@ -3,6 +3,7 @@ package xerxes.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 
@@ -68,5 +69,32 @@ class ParserTest {
         assertThrows(
                 IllegalArgumentException.class, () -> Parser.formatDate("")
         );
+    }
+
+    /** Verifies that an event can start and end on the same date. */
+    @Test
+    void handleCommand_eventWithSameStartAndEndDate_addsEvent() {
+        Parser parser = new Parser(new TaskStorage("unused-test-path"));
+        TaskList tasks = new TaskList();
+
+        CommandResult result = parser.handleCommand(
+                "event meeting /from 2/3/2026 /to 2/3/2026", tasks);
+
+        assertFalse(result.isError());
+        assertEquals("1: [E][ ] meeting (from: Mar 02 2026 to: Mar 02 2026 )", tasks.toString());
+    }
+
+    /** Verifies that an event cannot end before its start date. */
+    @Test
+    void handleCommand_eventEndingBeforeStart_returnsError() {
+        Parser parser = new Parser(new TaskStorage("unused-test-path"));
+        TaskList tasks = new TaskList();
+
+        CommandResult result = parser.handleCommand(
+                "event meeting /from 3/3/2026 /to 2/3/2026", tasks);
+
+        assertTrue(result.isError());
+        assertEquals("Eh, an event cannot end before it starts ah.", result.getMessage());
+        assertEquals("", tasks.toString());
     }
 }

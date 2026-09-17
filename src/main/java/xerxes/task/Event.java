@@ -27,7 +27,9 @@ public class Event extends Task {
         super(taskName);
         assert startTime != null : "An event must have a start date";
         assert endTime != null : "An event must have an end date";
-        assert !startTime.isAfter(endTime) : "An event cannot end before it starts";
+        if (startTime.isAfter(endTime)) {
+            throw new IllegalArgumentException("Eh, an event cannot end before it starts ah.");
+        }
         this.startTime = startTime;
         this.endTime = endTime;
     }
