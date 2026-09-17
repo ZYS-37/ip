@@ -86,6 +86,11 @@ public class Parser {
 
         input = normaliseInput(input);
 
+        if (input.startsWith(BYE_COMMAND + " ") || input.startsWith(LIST_COMMAND + " ")
+                || input.startsWith(SAVE_COMMAND + " ")) {
+            return error("Eh, bye, list, and save do not take extra arguments ah.");
+        }
+
         if (input.equals(BYE_COMMAND)) {
             return success("Ciao, cya again", true);
         }
