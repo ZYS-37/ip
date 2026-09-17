@@ -90,6 +90,10 @@ public class Parser {
                 || input.startsWith(SAVE_COMMAND + " ")) {
             return error("Eh, bye, list, and save do not take extra arguments ah.");
         }
+        if (input.matches(MARK_COMMAND + "-?\\d+\\s+.+")
+                || input.matches(UNMARK_COMMAND + "-?\\d+\\s+.+")) {
+            return error("Eh, mark and unmark only take one task number ah.");
+        }
 
         if (input.equals(BYE_COMMAND)) {
             return success("Ciao, cya again", true);
