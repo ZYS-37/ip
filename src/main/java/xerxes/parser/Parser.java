@@ -101,6 +101,9 @@ public class Parser {
         if (input.matches(UNMARK_COMMAND_PATTERN)) {
             return handleTaskStatus(input, tasks, false);
         }
+        if (input.matches(DELETE_COMMAND + "\\d+")) {
+            return handleDeleteTask(input, tasks);
+        }
         if (input.equals(MARK_COMMAND_NAME) || input.equals(UNMARK_COMMAND_NAME)
                 || input.equals(DELETE_COMMAND_NAME)) {
             return error("Eh, you need to provide a task number ah.");
@@ -117,9 +120,6 @@ public class Parser {
         }
         if (input.startsWith(EVENT_COMMAND)) {
             return handleAddEvent(input, tasks);
-        }
-        if (input.matches(DELETE_COMMAND + "\\d+")) {
-            return handleDeleteTask(input, tasks);
         }
         return error("I dont gets, not going to do anth.");
     }
