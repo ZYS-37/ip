@@ -1,10 +1,10 @@
 .label {
-    -fx-background-color: linear-gradient(to bottom right, #E59007, #FFD78C);
-    -fx-border-color: #C94C0E #C94C0E #C94C0E #C94C0E;
+    -fx-background-color: #22396F;
+    -fx-border-color: #0D1C42 #0D1C42 #0D1C42 #0D1C42;
     -fx-border-width: 2px;
     -fx-background-radius: 1em 1em 0 1em;
     -fx-border-radius: 1em 1em 0 1em;
-    -fx-text-fill: black;
+    -fx-text-fill: #FCF1D0;
 }
 
 .reply-label {
