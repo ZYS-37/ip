@@ -40,12 +40,12 @@ public class Xerxes {
 
         try {
             loadedTasks = new TaskList(taskStorage.load());
-            ui.showTopMessage("Save file has been loaded");
+            ui.showTopMessage("Yo your save file has been loaded");
         } catch (IOException e) {
-            ui.showTopError("Save file has failed to load: " + e.getMessage());
+            ui.showTopError("Oops yr save file didnt load: " + e.getMessage());
             loadedTasks = new TaskList();
         } catch (IllegalArgumentException e) {
-            ui.showTopError("Save file has been corrupted: " + e.getMessage());
+            ui.showTopError("Wah, your save file has been corrupted: " + e.getMessage());
             loadedTasks = new TaskList();
         }
         this.tasks = loadedTasks;

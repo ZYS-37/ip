@@ -82,7 +82,7 @@ public class Parser {
             return success("Ciao, cya again", true);
         }
         if (input.equals(LIST_COMMAND)) {
-            return success(tasks.toString());
+            return success("Yo your tasks are:\n" + tasks.toString());
         }
         if (input.equals(SAVE_COMMAND)) {
             return handleSaveTasks(tasks);
@@ -143,15 +143,15 @@ public class Parser {
     private CommandResult handleFindTasks(String input, TaskList tasks) {
         String keyword = input.substring(FIND_COMMAND.length()).trim();
         if (keyword.isEmpty()) {
-            return error("Please provide a keyword to search for.");
+            return error("Eh, please provide a keyword to search for eh.");
         }
 
         List<Task> matchingTasks = tasks.findMatchingTasks(keyword);
         if (matchingTasks.isEmpty()) {
-            return success("No matching tasks found.");
+            return success("wah dont have any matching tasks.");
         }
 
-        StringBuilder message = new StringBuilder("Here are the matching tasks in your list:\n");
+        StringBuilder message = new StringBuilder("Gotcha, here are the matching tasks:\n");
         for (int i = 0; i < matchingTasks.size(); i++) {
             message.append(i + 1).append(". ").append(matchingTasks.get(i));
             if (i < matchingTasks.size() - 1) {
@@ -173,7 +173,7 @@ public class Parser {
             return success("Awww " + (taskIndex + 1) + ": " + task
                     + " has been mark uncompleted. :(");
         } catch (NumberFormatException e) {
-            return error("what theee, your number is way too big!");
+            return error("W theee, your number is way too big!");
         } catch (IllegalArgumentException e) {
             return error(e.getMessage());
         }
@@ -185,7 +185,7 @@ public class Parser {
             taskStorage.save(tasks);
             return success("Yr tasks have been saved!");
         } catch (IOException e) {
-            return error("An error has occurred while saving!");
+            return error("Eh an error has occurred while saving!");
         }
     }
 
@@ -193,7 +193,7 @@ public class Parser {
     private CommandResult handleAddTodo(String input, TaskList tasks) {
         String description = input.substring(TODO_COMMAND.length()).trim();
         if (description.isEmpty()) {
-            return error("yoo the task name cannot be empty man.");
+            return error("Yoo the task name cannot be empty man.");
         }
 
         Task task = new ToDo(description);
@@ -206,12 +206,12 @@ public class Parser {
         String taskNameAndDeadline = input.substring(DEADLINE_COMMAND.length()).trim();
         int byIndex = taskNameAndDeadline.indexOf(DEADLINE_MARKER);
         if (byIndex < 0) {
-            return error("yoo yr format cmi must use : deadline <description> /by <time>");
+            return error("Yoo yr format cmi must use : deadline <description> /by <time>");
         }
 
         String taskName = taskNameAndDeadline.substring(0, byIndex).trim();
         if (taskName.isEmpty()) {
-            return error("yoo the task name cannot be empty man.");
+            return error("Yoo the task name cannot be empty man.");
         }
 
         try {
@@ -232,12 +232,12 @@ public class Parser {
         int toIndex = eventAndDuration.indexOf(EVENT_TO_MARKER,
                 fromIndex + EVENT_FROM_MARKER.length());
         if (fromIndex < 0 || toIndex < 0 || toIndex <= fromIndex + EVENT_FROM_MARKER.length()) {
-            return error("The format must be: event <description> /from <start> /to <end>");
+            return error("Yo this format cannot ah, it must be: event <description> /from <start> /to <end>");
         }
 
         String taskName = eventAndDuration.substring(0, fromIndex).trim();
         if (taskName.isEmpty()) {
-            return error("yoo the task name cannot be empty man.");
+            return error("Yoo the task name cannot be empty man.");
         }
 
         try {
@@ -258,7 +258,7 @@ public class Parser {
         try {
             int index = Integer.parseInt(input.substring(DELETE_COMMAND.length()).trim()) - 1;
             Task task = tasks.deleteTask(index);
-            return success("Task removed: " + task);
+            return success("Got it ah, I removed your task: " + task);
         } catch (IllegalArgumentException e) {
             return error(e.getMessage());
         }
@@ -290,7 +290,7 @@ public class Parser {
         try {
             return LocalDate.parse(rawDate, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid date/time format. Use: d/M/yyyy");
+            throw new IllegalArgumentException("Eh your date/time format cannot ah. Use: d/M/yyyy");
         }
     }
 }

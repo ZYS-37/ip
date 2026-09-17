@@ -78,7 +78,7 @@ public class TaskList implements Iterable<Task> {
     public void validateIndex(int index) {
         if (index < 0 || index >= tasks.size()) {
             throw new IllegalArgumentException(
-                    "Invalid task number! Please provide an index between 1 and " + tasks.size() + ".");
+                    "Yo your task number cannot lah! Give me an index between 1 and " + tasks.size() + ".");
         }
     }
 
