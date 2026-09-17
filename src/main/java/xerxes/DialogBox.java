@@ -38,9 +38,9 @@ public class DialogBox extends HBox {
         assert dialog != null : "DialogBox.fxml must define the dialog label";
         assert displayPicture != null : "DialogBox.fxml must define the display picture";
         dialog.setText(text);
-        displayPicture.setImage(img);
+        displayPicture.setImage(img);;
         double imageSize = 60.0;
-        displayPicture.setClip(new Circle(imageSize / 2, imageSize / 2,imageSize / 2));
+        displayPicture.setClip(new Circle(imageSize / 2, imageSize / 2, imageSize / 2));
     }
 
     /**

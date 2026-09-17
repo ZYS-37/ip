@@ -23,9 +23,12 @@ public class MainWindow extends AnchorPane {
 
     private Xerxes xerxes;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/oldMan1.jpg"));
-    private Image xerxesImage = new Image(this.getClass().getResourceAsStream("/images/oldMan2.jpg"));
+    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/oldMan1.jpg"));
+    private final Image xerxesImage = new Image(this.getClass().getResourceAsStream("/images/oldMan2.jpg"));
 
+    /**
+     * Initialises the dialog container and displays the introductory message.
+     */
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
@@ -42,8 +45,9 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Xerxes's reply and then appends them to
-     * the dialog container. Clears the user input after processing.
+     * Creates two dialog boxes, one echoing user input and the other
+     * containing Xerxes's reply and then appends them to the dialog container.
+     * Clears the user input after processing.
      */
     @FXML
     private void handleUserInput() {

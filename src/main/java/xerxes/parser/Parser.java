@@ -115,7 +115,7 @@ public class Parser {
      * Normalises Inputs by replacing aliases with long form
      *
      * @param input Command entered by the user.
-     * @result Command that has been normalised, where short form has been processed.
+     * @return Command that has been normalised, where short form has been processed.
      */
     private String normaliseInput(String input) {
         assert input != null : "Input command must not be null.";
