@@ -28,11 +28,19 @@ public class Parser {
 
     /** Command prefixes used to identify commands with arguments. */
     private static final String TODO_COMMAND = "todo ";
+    private static final String TODO_COMMAND_NAME = "todo";
     private static final String DEADLINE_COMMAND = "deadline ";
+    private static final String DEADLINE_COMMAND_NAME = "deadline";
     private static final String EVENT_COMMAND = "event ";
+    private static final String EVENT_COMMAND_NAME = "event";
     private static final String DELETE_COMMAND = "delete ";
-    private static final String MARK_COMMAND_PATTERN = "mark \\d+";
-    private static final String UNMARK_COMMAND_PATTERN = "unmark \\d+";
+    private static final String DELETE_COMMAND_NAME = "delete";
+    private static final String MARK_COMMAND = "mark ";
+    private static final String MARK_COMMAND_NAME = "mark";
+    private static final String UNMARK_COMMAND = "unmark ";
+    private static final String UNMARK_COMMAND_NAME = "unmark";
+    private static final String MARK_COMMAND_PATTERN = "mark -?\\d+";
+    private static final String UNMARK_COMMAND_PATTERN = "unmark -?\\d+";
 
     /** Command aliases. */
     private static final Map<String, String> COMMAND_ALIASES = Map.of(
@@ -78,6 +86,15 @@ public class Parser {
 
         input = normaliseInput(input);
 
+        if (input.startsWith(BYE_COMMAND + " ") || input.startsWith(LIST_COMMAND + " ")
+                || input.startsWith(SAVE_COMMAND + " ")) {
+            return error("Eh, bye, list, and save do not take extra arguments ah.");
+        }
+        if (input.matches(MARK_COMMAND + "-?\\d+\\s+.+")
+                || input.matches(UNMARK_COMMAND + "-?\\d+\\s+.+")) {
+            return error("Eh, mark and unmark only take one task number ah.");
+        }
+
         if (input.equals(BYE_COMMAND)) {
             return success("Ciao, cya again", true);
         }
@@ -96,6 +113,26 @@ public class Parser {
         if (input.matches(UNMARK_COMMAND_PATTERN)) {
             return handleTaskStatus(input, tasks, false);
         }
+        if (input.matches(DELETE_COMMAND + "-?\\d+")) {
+            return handleDeleteTask(input, tasks);
+        }
+        if (input.equals(MARK_COMMAND_NAME) || input.equals(UNMARK_COMMAND_NAME)
+                || input.equals(DELETE_COMMAND_NAME)) {
+            return error("Eh, you need to provide a task number ah.");
+        }
+        if (input.equals(TODO_COMMAND_NAME)) {
+            return error("Yoo the task name cannot be empty man.");
+        }
+        if (input.equals(DEADLINE_COMMAND_NAME)) {
+            return error("Yoo yr format cmi must use : deadline <description> /by <time>");
+        }
+        if (input.equals(EVENT_COMMAND_NAME)) {
+            return error("Yo this format cannot ah, it must be: event <description> /from <start> /to <end>");
+        }
+        if (input.startsWith(MARK_COMMAND) || input.startsWith(UNMARK_COMMAND)
+                || input.startsWith(DELETE_COMMAND)) {
+            return error("Eh, the task number must be a whole number ah.");
+        }
         if (input.startsWith(TODO_COMMAND)) {
             return handleAddTodo(input, tasks);
         }
@@ -104,9 +141,6 @@ public class Parser {
         }
         if (input.startsWith(EVENT_COMMAND)) {
             return handleAddEvent(input, tasks);
-        }
-        if (input.matches(DELETE_COMMAND + "\\d+")) {
-            return handleDeleteTask(input, tasks);
         }
         return error("I dont gets, not going to do anth.");
     }
@@ -129,7 +163,10 @@ public class Parser {
         String command = parts[0].toLowerCase(Locale.ROOT);
         String fullCommand = COMMAND_ALIASES.get(command);
         if (fullCommand == null) {
-            return trimmedInput;
+            if (parts.length == 1) {
+                return command;
+            }
+            return command + " " + parts[1];
         }
 
         if (parts.length == 1) {
@@ -164,7 +201,11 @@ public class Parser {
     /** Handles a mark or unmark command. */
     private CommandResult handleTaskStatus(String input, TaskList tasks, boolean isCompleted) {
         try {
-            int taskIndex = Integer.parseInt(input.split(" ")[1]) - 1;
+            int taskNumber = Integer.parseInt(input.split(" ")[1]);
+            if (taskNumber <= 0) {
+                return error("Eh, the task number must be positive ah.");
+            }
+            int taskIndex = taskNumber - 1;
             Task task = tasks.handleCompletionStatus(taskIndex, isCompleted);
             if (isCompleted) {
                 return success("Yippy! " + (taskIndex + 1) + ": " + task
@@ -197,7 +238,11 @@ public class Parser {
         }
 
         Task task = new ToDo(description);
-        tasks.addTask(task);
+        try {
+            tasks.addTask(task);
+        } catch (IllegalArgumentException e) {
+            return error(e.getMessage());
+        }
         return success("Gotcha boss, the task: " + task + " has been added!");
     }
 
@@ -207,6 +252,10 @@ public class Parser {
         int byIndex = taskNameAndDeadline.indexOf(DEADLINE_MARKER);
         if (byIndex < 0) {
             return error("Yoo yr format cmi must use : deadline <description> /by <time>");
+        }
+        if (taskNameAndDeadline.indexOf(DEADLINE_MARKER,
+                byIndex + DEADLINE_MARKER.length()) >= 0) {
+            return error("Eh, a deadline can only have one /by parameter ah.");
         }
 
         String taskName = taskNameAndDeadline.substring(0, byIndex).trim();
@@ -234,6 +283,13 @@ public class Parser {
         if (fromIndex < 0 || toIndex < 0 || toIndex <= fromIndex + EVENT_FROM_MARKER.length()) {
             return error("Yo this format cannot ah, it must be: event <description> /from <start> /to <end>");
         }
+        boolean hasMultipleFromMarkers = eventAndDuration.indexOf(EVENT_FROM_MARKER,
+                fromIndex + EVENT_FROM_MARKER.length()) >= 0;
+        boolean hasMultipleToMarkers = eventAndDuration.indexOf(EVENT_TO_MARKER,
+                toIndex + EVENT_TO_MARKER.length()) >= 0;
+        if (hasMultipleFromMarkers || hasMultipleToMarkers) {
+            return error("Eh, an event can only have one /from and one /to parameter ah.");
+        }
 
         String taskName = eventAndDuration.substring(0, fromIndex).trim();
         if (taskName.isEmpty()) {
@@ -256,7 +312,11 @@ public class Parser {
     /** Handles a delete command. */
     private CommandResult handleDeleteTask(String input, TaskList tasks) {
         try {
-            int index = Integer.parseInt(input.substring(DELETE_COMMAND.length()).trim()) - 1;
+            int taskNumber = Integer.parseInt(input.substring(DELETE_COMMAND.length()).trim());
+            if (taskNumber <= 0) {
+                return error("Eh, the task number must be positive ah.");
+            }
+            int index = taskNumber - 1;
             Task task = tasks.deleteTask(index);
             return success("Got it ah, I removed your task: " + task);
         } catch (IllegalArgumentException e) {

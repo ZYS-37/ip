@@ -76,6 +76,9 @@ public class TaskList implements Iterable<Task> {
      * @throws IllegalArgumentException If the index is outside this list.
      */
     public void validateIndex(int index) {
+        if (tasks.isEmpty()) {
+            throw new IllegalArgumentException("Wait ah, there are no tasks in your list lah.");
+        }
         if (index < 0 || index >= tasks.size()) {
             throw new IllegalArgumentException(
                     "Yo your task number cannot lah! Give me an index between 1 and " + tasks.size() + ".");
@@ -83,12 +86,16 @@ public class TaskList implements Iterable<Task> {
     }
 
     /**
-     * Appends a task to this list.
+     * Appends a task to this list if an equivalent task is not already present.
      *
      * @param task Task to add.
+     * @throws IllegalArgumentException If an equivalent task already exists.
      */
     public void addTask(Task task) {
         assert task != null : "A task list cannot contain a null task";
+        if (tasks.contains(task)) {
+            throw new IllegalArgumentException("Wah, that task already exists ah.");
+        }
         this.tasks.add(task);
     }
 

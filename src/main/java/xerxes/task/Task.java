@@ -1,5 +1,8 @@
 package xerxes.task;
 
+import java.util.Locale;
+import java.util.Objects;
+
 /**
  * Represents a task with a description and completion status.
  * Subclasses add task-specific details such as a deadline or event duration.
@@ -47,6 +50,36 @@ public class Task {
      */
     public String getTaskName() {
         return this.taskName;
+    }
+
+    /**
+     * Checks whether another task has the same type and description.
+     * Completion status is intentionally excluded from task equality.
+     *
+     * @param other Object to compare with this task.
+     * @return True if both objects represent equivalent tasks.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+
+        Task task = (Task) other;
+        return taskName.equalsIgnoreCase(task.taskName);
+    }
+
+    /**
+     * Returns a hash code based on the task type and description.
+     *
+     * @return Hash code for this task.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClass(), taskName.toLowerCase(Locale.ROOT));
     }
 
     /**
