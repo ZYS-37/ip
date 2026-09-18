@@ -5,6 +5,31 @@ and deleting tasks. It provides a graphical user interface (GUI) while keeping
 the same command-based interaction available through the command line
 interface (CLI).
 
+## Table of contents
+
+* [Quick start](#quick-start)
+  * [Prerequisites](#prerequisites)
+  * [Running Xerxes](#running-xerxes)
+* [Command format](#command-format)
+* [Features](#features)
+  * [Adding a to-do task](#adding-a-to-do-task-todo)
+  * [Adding a deadline](#adding-a-deadline-deadline)
+  * [Adding an event](#adding-an-event-event)
+  * [Listing all tasks](#listing-all-tasks-list)
+  * [Finding tasks](#finding-tasks-find)
+  * [Marking a task as completed](#marking-a-task-as-completed-mark)
+  * [Marking a task as incomplete](#marking-a-task-as-incomplete-unmark)
+  * [Deleting a task](#deleting-a-task-delete)
+  * [Saving tasks](#saving-tasks-save)
+  * [Exiting Xerxes](#exiting-xerxes-bye)
+* [Command aliases](#command-aliases)
+* [Task display format](#task-display-format)
+* [Data storage](#data-storage)
+  * [Editing the save file](#editing-the-save-file)
+* [FAQ](#faq)
+* [Command summary](#command-summary)
+
+
 ## Quick start
 
 ### Prerequisites
@@ -14,7 +39,7 @@ Ensure that the following are installed:
 * Java Development Kit (JDK) 25.
 ### Running Xerxes
 
-1. Download the latest .jar file from here.
+1. Download the latest .jar file from [here](https://github.com/ZYS-37/ip/releases).
 
 2. Copy the file to the folder you want to use as the home folder for your AddressBook.
 
