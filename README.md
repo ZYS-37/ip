@@ -25,7 +25,7 @@ A GUI similar to the one below should appear in a few seconds.
 4. Type a command into the text field and press **Enter** or click **Send**. here are some commands that you can try:
    - ```todo quickstart```: Adds a ToDo task "quickstart"
    - ```list```: Lists all contacts
-   - ```delete``` 1: Deletes the first task in the current list
+   - ```delete 1```: Deletes the first task in the current list
    - ```bye```: Exits the app
 5. Refer to the features section below for details of each command
 
